@@ -21,6 +21,7 @@ func writeField(f field, buffer *bytes.Buffer) {
 	for _, tv := range f {
 		buffer.Write(tv.bytes)
 	}
+	buffer.Write([]byte("|"))
 }
 
 // tagOrder true if tag i should occur before tag j
