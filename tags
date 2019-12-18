@@ -1,0 +1,321 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACCEPT_SUITE	Makefile	/^ACCEPT_SUITE=fix40 fix41 fix42 fix43 fix44 fix50 fix50sp1 fix50sp2 $/;"	m
+Comparator	_test/Comparator.rb	/^class Comparator < Hash$/;"	c
+ComparatorTestCase	_test/ComparatorTestCase.rb	/^class ComparatorTestCase < RUNIT::TestCase$/;"	c
+FixParser	_test/FixParser.rb	/^class FixParser$/;"	c
+FixParserTestCase	_test/FixParserTestCase.rb	/^class FixParserTestCase < RUNIT::TestCase$/;"	c
+MockReflector	_test/ReflectorTestCase.rb	/^class MockReflector < Reflector$/;"	c
+Reflector	_test/Reflector.rb	/^class Reflector < Array$/;"	c
+ReflectorClient	_test/ReflectorClient.rb	/^class ReflectorClient$/;"	c
+ReflectorClientTestCase	_test/ReflectorClientTestCase.rb	/^class ReflectorClientTestCase < RUNIT::TestCase$/;"	c
+ReflectorServer	_test/ReflectorServer.rb	/^class ReflectorServer < SocketServer$/;"	c
+ReflectorServerTestCase	_test/ReflectorServerTestCase.rb	/^class ReflectorServerTestCase < RUNIT::TestCase$/;"	c
+ReflectorTestCase	_test/ReflectorTestCase.rb	/^class ReflectorTestCase < RUNIT::TestCase$/;"	c
+RunnerTestCase	_test/RunnerTestCase.rb	/^class RunnerTestCase < RUNIT::TestCase$/;"	c
+SocketServer	_test/SocketServer.rb	/^class SocketServer$/;"	c
+SocketServerTestCase	_test/SocketServerTestCase.rb	/^class SocketServerTestCase < RUNIT::TestCase$/;"	c
+closed?	_test/SocketServer.rb	/^  def closed?$/;"	f	class:SocketServer
+compare	_test/Comparator.rb	/^  def compare(left, right)$/;"	f	class:Comparator
+compareAction	_test/ReflectorClientTestCase.rb	/^    def client.compareAction(e, a)$/;"	F	class:ReflectorClientTestCase.test_reflectMessages
+compareAction	_test/ReflectorServer.rb	/^  def compareAction(e, a)$/;"	f
+compareAction	_test/Runner.rb	/^  def c.compareAction(e, a)$/;"	F	class:extendProcess
+connectAction	_test/FixParserTestCase.rb	/^    def server.connectAction(s)$/;"	F	class:FixParserTestCase.test_readFixMessage
+connectAction	_test/ReflectorServer.rb	/^  def connectAction(s)$/;"	f
+connectAction	_test/ReflectorTestCase.rb	/^    def reflector.connectAction(cid)$/;"	F	class:ReflectorTestCase.test_identifyFile
+connectAction	_test/SocketServerTestCase.rb	/^    def socketServer.connectAction(s)$/;"	F	class:SocketServerTestCase.test_listen
+connectQueue	_test/SocketServerTestCase.rb	/^    def socketServer.connectQueue$/;"	F	class:SocketServerTestCase.test_listen
+connectQueue	_test/SocketServerTestCase.rb	/^    def socketServer.connectQueue=(q)$/;"	F	class:SocketServerTestCase.test_listen
+createProcess	_test/Runner.rb	/^def createProcess(file, address, port)$/;"	f
+cum	_test/ReflectorTestCase.rb	/^    def reflector.cum$/;"	F	class:ReflectorTestCase.test_identifyFile
+cum	_test/ReflectorTestCase.rb	/^    def reflector.cum=(c)$/;"	F	class:ReflectorTestCase.test_identifyFile
+disconnectAction	_test/FixParserTestCase.rb	/^    def server.disconnectAction(s)$/;"	F	class:FixParserTestCase.test_readFixMessage
+disconnectAction	_test/ReflectorServer.rb	/^  def disconnectAction(s)$/;"	f
+disconnectAction	_test/ReflectorTestCase.rb	/^    def reflector.disconnectAction(cid)$/;"	F	class:ReflectorTestCase.test_identifyFile
+disconnectAction	_test/SocketServerTestCase.rb	/^    def socketServer.disconnectAction(s)$/;"	F	class:SocketServerTestCase.test_listen
+disconnectQueue	_test/SocketServerTestCase.rb	/^    def socketServer.disconnectQueue$/;"	F	class:SocketServerTestCase.test_listen
+disconnectQueue	_test/SocketServerTestCase.rb	/^    def socketServer.disconnectQueue=(q)$/;"	F	class:SocketServerTestCase.test_listen
+econ	_test/ReflectorTestCase.rb	/^    def reflector.econ$/;"	F	class:ReflectorTestCase.test_identifyFile
+econ	_test/ReflectorTestCase.rb	/^    def reflector.econ=(e)$/;"	F	class:ReflectorTestCase.test_identifyFile
+edis	_test/ReflectorTestCase.rb	/^    def reflector.edis$/;"	F	class:ReflectorTestCase.test_identifyFile
+edis	_test/ReflectorTestCase.rb	/^    def reflector.edis=(e)$/;"	F	class:ReflectorTestCase.test_identifyFile
+err	_test/ReflectorTestCase.rb	/^    def reflector.err$/;"	F	class:ReflectorTestCase.test_identifyFile
+err	_test/ReflectorTestCase.rb	/^    def reflector.err=(e)$/;"	F	class:ReflectorTestCase.test_identifyFile
+errorAction	_test/ReflectorTestCase.rb	/^    def reflector.errorAction(lineNum, msg)$/;"	F	class:ReflectorTestCase.test_identifyFile
+errorAction	_test/Runner.rb	/^  def c.errorAction(lineNum, line)$/;"	F	class:extendProcess
+event_log	_sql/mssql/quickfix_database.sql	/^CREATE TABLE event_log ($/;"	t
+event_log	_sql/mysql/event_log_table.sql	/^CREATE TABLE event_log ($/;"	t
+event_log	_sql/postgresql/event_log_table.sql	/^CREATE TABLE event_log ($/;"	t
+event_log	_sql/sqlite3/event_log_table.sql	/^CREATE TABLE event_log ($/;"	t
+event_log.beginstring	_sql/mssql/quickfix_database.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+event_log.beginstring	_sql/mysql/event_log_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+event_log.beginstring	_sql/postgresql/event_log_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+event_log.beginstring	_sql/sqlite3/event_log_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+event_log.id	_sql/mssql/quickfix_database.sql	/^  id INT NOT NULL IDENTITY,$/;"	F
+event_log.id	_sql/mysql/event_log_table.sql	/^  id INT UNSIGNED NOT NULL AUTO_INCREMENT,$/;"	F
+event_log.id	_sql/postgresql/event_log_table.sql	/^  id INTEGER DEFAULT NEXTVAL('event_log_sequence'),$/;"	F
+event_log.id	_sql/sqlite3/event_log_table.sql	/^  id INTEGER PRIMARY KEY NOT NULL,$/;"	F
+event_log.sendercompid	_sql/mssql/quickfix_database.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendercompid	_sql/mysql/event_log_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendercompid	_sql/postgresql/event_log_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendercompid	_sql/sqlite3/event_log_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.senderlocid	_sql/mssql/quickfix_database.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.senderlocid	_sql/mysql/event_log_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.senderlocid	_sql/postgresql/event_log_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.senderlocid	_sql/sqlite3/event_log_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendersubid	_sql/mssql/quickfix_database.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendersubid	_sql/mysql/event_log_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendersubid	_sql/postgresql/event_log_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.sendersubid	_sql/sqlite3/event_log_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.session_qualifier	_sql/mssql/quickfix_database.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+event_log.session_qualifier	_sql/mysql/event_log_table.sql	/^  session_qualifier VARCHAR(64),$/;"	F
+event_log.session_qualifier	_sql/postgresql/event_log_table.sql	/^  session_qualifier VARCHAR(64),$/;"	F
+event_log.session_qualifier	_sql/sqlite3/event_log_table.sql	/^  session_qualifier VARCHAR(64),$/;"	F
+event_log.targetcompid	_sql/mssql/quickfix_database.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetcompid	_sql/mysql/event_log_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetcompid	_sql/postgresql/event_log_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetcompid	_sql/sqlite3/event_log_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetlocid	_sql/mssql/quickfix_database.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetlocid	_sql/mysql/event_log_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetlocid	_sql/postgresql/event_log_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetlocid	_sql/sqlite3/event_log_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetsubid	_sql/mssql/quickfix_database.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetsubid	_sql/mysql/event_log_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetsubid	_sql/postgresql/event_log_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.targetsubid	_sql/sqlite3/event_log_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+event_log.text	_sql/mssql/quickfix_database.sql	/^  text TEXT NOT NULL,$/;"	F
+event_log.text	_sql/mysql/event_log_table.sql	/^  text TEXT NOT NULL,$/;"	F
+event_log.text	_sql/postgresql/event_log_table.sql	/^  text TEXT NOT NULL,$/;"	F
+event_log.text	_sql/sqlite3/event_log_table.sql	/^  text TEXT NOT NULL$/;"	F
+event_log.time	_sql/mssql/quickfix_database.sql	/^  time DATETIME NOT NULL,$/;"	F
+event_log.time	_sql/mysql/event_log_table.sql	/^  time DATETIME NOT NULL,$/;"	F
+event_log.time	_sql/postgresql/event_log_table.sql	/^  time TIMESTAMP WITH TIME ZONE NOT NULL,$/;"	F
+event_log.time	_sql/sqlite3/event_log_table.sql	/^  time DATETIME NOT NULL,$/;"	F
+exp	_test/ReflectorTestCase.rb	/^    def reflector.exp$/;"	F	class:ReflectorTestCase.test_identifyFile
+exp	_test/ReflectorTestCase.rb	/^    def reflector.exp=(e)$/;"	F	class:ReflectorTestCase.test_identifyFile
+expectedAction	_test/ReflectorClient.rb	/^  def expectedAction(msg, cid)$/;"	f
+expectedAction	_test/ReflectorTestCase.rb	/^    def reflector.expectedAction(msg, cid)$/;"	F	class:ReflectorTestCase.test_identifyFile
+extendProcess	_test/Runner.rb	/^def extendProcess(c)$/;"	f
+fixify!	_test/Reflector.rb	/^  def fixify!(message)$/;"	f	class:Reflector
+getTime	_test/Reflector.rb	/^  def getTime$/;"	f	class:Reflector
+getTime	_test/ReflectorTestCase.rb	/^  def getTime$/;"	f	class:MockReflector
+icon	_test/ReflectorTestCase.rb	/^    def reflector.icon$/;"	F	class:ReflectorTestCase.test_identifyFile
+icon	_test/ReflectorTestCase.rb	/^    def reflector.icon=(i)$/;"	F	class:ReflectorTestCase.test_identifyFile
+identifyMessage	_test/Reflector.rb	/^  def identifyMessage(message)$/;"	f	class:Reflector
+idis	_test/ReflectorTestCase.rb	/^    def reflector.idis$/;"	F	class:ReflectorTestCase.test_identifyFile
+idis	_test/ReflectorTestCase.rb	/^    def reflector.idis=(i)$/;"	F	class:ReflectorTestCase.test_identifyFile
+ini	_test/ReflectorTestCase.rb	/^    def reflector.ini$/;"	F	class:ReflectorTestCase.test_identifyFile
+ini	_test/ReflectorTestCase.rb	/^    def reflector.ini=(i)$/;"	F	class:ReflectorTestCase.test_identifyFile
+initialize	_test/Comparator.rb	/^  def initialize(patterns)$/;"	f	class:Comparator
+initialize	_test/FixParser.rb	/^  def initialize(io)$/;"	f	class:FixParser
+initialize	_test/ReflectorClient.rb	/^  def initialize(messages, address, port)$/;"	f	class:ReflectorClient
+initialize	_test/ReflectorServer.rb	/^  def initialize(messages, address = "localhost", port = 5000)$/;"	f	class:ReflectorServer
+initiateAction	_test/ReflectorClient.rb	/^  def initiateAction(msg, cid)$/;"	f
+initiateAction	_test/ReflectorTestCase.rb	/^    def reflector.initiateAction(msg, cid)$/;"	F	class:ReflectorTestCase.test_identifyFile
+is_testing	_test/test.rb	/^def Object.is_testing$/;"	F
+is_testing	_test/test.rb	/^def Object.is_testing=(b)$/;"	F
+listen	_test/SocketServer.rb	/^  def listen(port)$/;"	f	class:SocketServer
+message	_test/FixParserTestCase.rb	/^    def server.message=(m)$/;"	F	class:FixParserTestCase.test_readFixMessage
+messages	_sql/mssql/quickfix_database.sql	/^CREATE TABLE messages ($/;"	t
+messages	_sql/mysql/messages_table.sql	/^CREATE TABLE messages ($/;"	t
+messages	_sql/oracle/messages_table.sql	/^CREATE TABLE messages ($/;"	t
+messages	_sql/postgresql/messages_table.sql	/^CREATE TABLE messages ($/;"	t
+messages	_sql/sqlite3/messages_table.sql	/^CREATE TABLE messages ($/;"	t
+messages.beginstring	_sql/mssql/quickfix_database.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages.beginstring	_sql/mysql/messages_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages.beginstring	_sql/oracle/messages_table.sql	/^  beginstring VARCHAR2(8) NOT NULL,$/;"	F
+messages.beginstring	_sql/postgresql/messages_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages.beginstring	_sql/sqlite3/messages_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages.message	_sql/mssql/quickfix_database.sql	/^  message TEXT NOT NULL,$/;"	F
+messages.message	_sql/mysql/messages_table.sql	/^  message TEXT NOT NULL,$/;"	F
+messages.message	_sql/oracle/messages_table.sql	/^  message VARCHAR2(4000) NOT NULL,$/;"	F
+messages.message	_sql/postgresql/messages_table.sql	/^  message TEXT NOT NULL,$/;"	F
+messages.message	_sql/sqlite3/messages_table.sql	/^  message TEXT NOT NULL,$/;"	F
+messages.msgseqnum	_sql/mssql/quickfix_database.sql	/^  msgseqnum INT NOT NULL,$/;"	F
+messages.msgseqnum	_sql/mysql/messages_table.sql	/^  msgseqnum INT NOT NULL, $/;"	F
+messages.msgseqnum	_sql/oracle/messages_table.sql	/^  msgseqnum INTEGER NOT NULL, $/;"	F
+messages.msgseqnum	_sql/postgresql/messages_table.sql	/^  msgseqnum INTEGER NOT NULL, $/;"	F
+messages.msgseqnum	_sql/sqlite3/messages_table.sql	/^  msgseqnum INT NOT NULL, $/;"	F
+messages.sendercompid	_sql/mssql/quickfix_database.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendercompid	_sql/mysql/messages_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendercompid	_sql/oracle/messages_table.sql	/^  sendercompid VARCHAR2(64) NOT NULL,$/;"	F
+messages.sendercompid	_sql/postgresql/messages_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendercompid	_sql/sqlite3/messages_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages.senderlocid	_sql/mssql/quickfix_database.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.senderlocid	_sql/mysql/messages_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.senderlocid	_sql/oracle/messages_table.sql	/^  senderlocid VARCHAR2(64) NOT NULL,$/;"	F
+messages.senderlocid	_sql/postgresql/messages_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.senderlocid	_sql/sqlite3/messages_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendersubid	_sql/mssql/quickfix_database.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendersubid	_sql/mysql/messages_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendersubid	_sql/oracle/messages_table.sql	/^  sendersubid VARCHAR2(64) NOT NULL,$/;"	F
+messages.sendersubid	_sql/postgresql/messages_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages.sendersubid	_sql/sqlite3/messages_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages.session_qualifier	_sql/mssql/quickfix_database.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages.session_qualifier	_sql/mysql/messages_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages.session_qualifier	_sql/oracle/messages_table.sql	/^  session_qualifier VARCHAR2(64) NOT NULL,$/;"	F
+messages.session_qualifier	_sql/postgresql/messages_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages.session_qualifier	_sql/sqlite3/messages_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages.targetcompid	_sql/mssql/quickfix_database.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetcompid	_sql/mysql/messages_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetcompid	_sql/oracle/messages_table.sql	/^  targetcompid VARCHAR2(64) NOT NULL,$/;"	F
+messages.targetcompid	_sql/postgresql/messages_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetcompid	_sql/sqlite3/messages_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetlocid	_sql/mssql/quickfix_database.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetlocid	_sql/mysql/messages_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetlocid	_sql/oracle/messages_table.sql	/^  targetlocid VARCHAR2(64) NOT NULL,$/;"	F
+messages.targetlocid	_sql/postgresql/messages_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetlocid	_sql/sqlite3/messages_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetsubid	_sql/mssql/quickfix_database.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetsubid	_sql/mysql/messages_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetsubid	_sql/oracle/messages_table.sql	/^  targetsubid VARCHAR2(64) NOT NULL,$/;"	F
+messages.targetsubid	_sql/postgresql/messages_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages.targetsubid	_sql/sqlite3/messages_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log	_sql/mssql/quickfix_database.sql	/^CREATE TABLE messages_log ($/;"	t
+messages_log	_sql/mysql/messages_log_table.sql	/^CREATE TABLE messages_log ($/;"	t
+messages_log	_sql/postgresql/messages_log_table.sql	/^CREATE TABLE messages_log ($/;"	t
+messages_log	_sql/sqlite3/messages_log_table.sql	/^CREATE TABLE messages_log ($/;"	t
+messages_log.beginstring	_sql/mssql/quickfix_database.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages_log.beginstring	_sql/mysql/messages_log_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages_log.beginstring	_sql/postgresql/messages_log_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages_log.beginstring	_sql/sqlite3/messages_log_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+messages_log.id	_sql/mssql/quickfix_database.sql	/^  id INT NOT NULL IDENTITY,$/;"	F
+messages_log.id	_sql/mysql/messages_log_table.sql	/^  id INT UNSIGNED NOT NULL AUTO_INCREMENT,$/;"	F
+messages_log.id	_sql/postgresql/messages_log_table.sql	/^  id INTEGER DEFAULT NEXTVAL('messages_log_sequence'),$/;"	F
+messages_log.id	_sql/sqlite3/messages_log_table.sql	/^  id INTEGER PRIMARY KEY NOT NULL,$/;"	F
+messages_log.sendercompid	_sql/mssql/quickfix_database.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendercompid	_sql/mysql/messages_log_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendercompid	_sql/postgresql/messages_log_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendercompid	_sql/sqlite3/messages_log_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.senderlocid	_sql/mssql/quickfix_database.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.senderlocid	_sql/mysql/messages_log_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.senderlocid	_sql/postgresql/messages_log_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.senderlocid	_sql/sqlite3/messages_log_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendersubid	_sql/mssql/quickfix_database.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendersubid	_sql/mysql/messages_log_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendersubid	_sql/postgresql/messages_log_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.sendersubid	_sql/sqlite3/messages_log_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.session_qualifier	_sql/mssql/quickfix_database.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages_log.session_qualifier	_sql/mysql/messages_log_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages_log.session_qualifier	_sql/postgresql/messages_log_table.sql	/^  session_qualifier VARCHAR(64),$/;"	F
+messages_log.session_qualifier	_sql/sqlite3/messages_log_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetcompid	_sql/mssql/quickfix_database.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetcompid	_sql/mysql/messages_log_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetcompid	_sql/postgresql/messages_log_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetcompid	_sql/sqlite3/messages_log_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetlocid	_sql/mssql/quickfix_database.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetlocid	_sql/mysql/messages_log_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetlocid	_sql/postgresql/messages_log_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetlocid	_sql/sqlite3/messages_log_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetsubid	_sql/mssql/quickfix_database.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetsubid	_sql/mysql/messages_log_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetsubid	_sql/postgresql/messages_log_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.targetsubid	_sql/sqlite3/messages_log_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+messages_log.text	_sql/mssql/quickfix_database.sql	/^  text TEXT NOT NULL,$/;"	F
+messages_log.text	_sql/mysql/messages_log_table.sql	/^  text TEXT NOT NULL,$/;"	F
+messages_log.text	_sql/postgresql/messages_log_table.sql	/^  text TEXT NOT NULL,$/;"	F
+messages_log.text	_sql/sqlite3/messages_log_table.sql	/^  text TEXT NOT NULL$/;"	F
+messages_log.time	_sql/mssql/quickfix_database.sql	/^  time DATETIME NOT NULL,$/;"	F
+messages_log.time	_sql/mysql/messages_log_table.sql	/^  time DATETIME NOT NULL,$/;"	F
+messages_log.time	_sql/postgresql/messages_log_table.sql	/^  time TIMESTAMP WITH TIME ZONE NOT NULL,$/;"	F
+messages_log.time	_sql/sqlite3/messages_log_table.sql	/^  time DATETIME NOT NULL,$/;"	F
+next	_test/ReflectorClientTestCase.rb	/^    def client.next$/;"	F	class:ReflectorClientTestCase.test_reflectMessages
+patterns	_test/Runner.rb	/^  def c.patterns=(p)$/;"	F	class:extendProcess
+port	_test/test.rb	/^  def port$/;"	f
+port=	_test/test.rb	/^  def port=(p)$/;"	f
+printResult	_test/Runner.rb	/^def printResult(test, exception)$/;"	f
+processFile	_test/Reflector.rb	/^  def processFile(messages)$/;"	f	class:Reflector
+processLine	_test/Reflector.rb	/^  def processLine(lineNum, line, body, cid)$/;"	f	class:Reflector
+readFixMessage	_test/FixParser.rb	/^  def readFixMessage()$/;"	f	class:FixParser
+reason	_test/Comparator.rb	/^  def reason()$/;"	f	class:Comparator
+receiveAction	_test/FixParserTestCase.rb	/^    def server.receiveAction(s)$/;"	F	class:FixParserTestCase.test_readFixMessage
+receiveAction	_test/ReflectorServer.rb	/^  def receiveAction(s)$/;"	f
+receiveAction	_test/SocketServerTestCase.rb	/^    def socketServer.receiveAction(s)$/;"	F	class:SocketServerTestCase.test_listen
+receiveQueue	_test/SocketServerTestCase.rb	/^    def socketServer.receiveQueue$/;"	F	class:SocketServerTestCase.test_listen
+receiveQueue	_test/SocketServerTestCase.rb	/^    def socketServer.receiveQueue=(q)$/;"	F	class:SocketServerTestCase.test_listen
+responseAction	_test/ReflectorClient.rb	/^  def responseAction(msg, cid)$/;"	f
+sessions	_sql/mssql/quickfix_database.sql	/^CREATE TABLE sessions ($/;"	t
+sessions	_sql/mysql/sessions_table.sql	/^CREATE TABLE sessions ($/;"	t
+sessions	_sql/oracle/sessions_table.sql	/^CREATE TABLE sessions ($/;"	t
+sessions	_sql/postgresql/sessions_table.sql	/^CREATE TABLE sessions ($/;"	t
+sessions	_sql/sqlite3/sessions_table.sql	/^CREATE TABLE sessions ($/;"	t
+sessions.beginstring	_sql/mssql/quickfix_database.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+sessions.beginstring	_sql/mysql/sessions_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+sessions.beginstring	_sql/oracle/sessions_table.sql	/^  beginstring VARCHAR2(8) NOT NULL,$/;"	F
+sessions.beginstring	_sql/postgresql/sessions_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+sessions.beginstring	_sql/sqlite3/sessions_table.sql	/^  beginstring CHAR(8) NOT NULL,$/;"	F
+sessions.creation_time	_sql/mssql/quickfix_database.sql	/^  creation_time DATETIME NOT NULL,$/;"	F
+sessions.creation_time	_sql/mysql/sessions_table.sql	/^  creation_time DATETIME NOT NULL,$/;"	F
+sessions.creation_time	_sql/oracle/sessions_table.sql	/^  creation_time TIMESTAMP NOT NULL,$/;"	F
+sessions.creation_time	_sql/postgresql/sessions_table.sql	/^  creation_time TIMESTAMP WITH TIME ZONE NOT NULL,$/;"	F
+sessions.creation_time	_sql/sqlite3/sessions_table.sql	/^  creation_time DATETIME NOT NULL,$/;"	F
+sessions.incoming_seqnum	_sql/mssql/quickfix_database.sql	/^  incoming_seqnum INT NOT NULL,$/;"	F
+sessions.incoming_seqnum	_sql/mysql/sessions_table.sql	/^  incoming_seqnum INT NOT NULL, $/;"	F
+sessions.incoming_seqnum	_sql/oracle/sessions_table.sql	/^  incoming_seqnum INTEGER NOT NULL, $/;"	F
+sessions.incoming_seqnum	_sql/postgresql/sessions_table.sql	/^  incoming_seqnum INTEGER NOT NULL, $/;"	F
+sessions.incoming_seqnum	_sql/sqlite3/sessions_table.sql	/^  incoming_seqnum INT NOT NULL, $/;"	F
+sessions.outgoing_seqnum	_sql/mssql/quickfix_database.sql	/^  outgoing_seqnum INT NOT NULL,$/;"	F
+sessions.outgoing_seqnum	_sql/mysql/sessions_table.sql	/^  outgoing_seqnum INT NOT NULL,$/;"	F
+sessions.outgoing_seqnum	_sql/oracle/sessions_table.sql	/^  outgoing_seqnum INTEGER NOT NULL,$/;"	F
+sessions.outgoing_seqnum	_sql/postgresql/sessions_table.sql	/^  outgoing_seqnum INTEGER NOT NULL,$/;"	F
+sessions.outgoing_seqnum	_sql/sqlite3/sessions_table.sql	/^  outgoing_seqnum INT NOT NULL,$/;"	F
+sessions.sendercompid	_sql/mssql/quickfix_database.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendercompid	_sql/mysql/sessions_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendercompid	_sql/oracle/sessions_table.sql	/^  sendercompid VARCHAR2(64) NOT NULL,$/;"	F
+sessions.sendercompid	_sql/postgresql/sessions_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendercompid	_sql/sqlite3/sessions_table.sql	/^  sendercompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.senderlocid	_sql/mssql/quickfix_database.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.senderlocid	_sql/mysql/sessions_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.senderlocid	_sql/oracle/sessions_table.sql	/^  senderlocid VARCHAR2(64) NOT NULL,$/;"	F
+sessions.senderlocid	_sql/postgresql/sessions_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.senderlocid	_sql/sqlite3/sessions_table.sql	/^  senderlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendersubid	_sql/mssql/quickfix_database.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendersubid	_sql/mysql/sessions_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendersubid	_sql/oracle/sessions_table.sql	/^  sendersubid VARCHAR2(64) NOT NULL,$/;"	F
+sessions.sendersubid	_sql/postgresql/sessions_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.sendersubid	_sql/sqlite3/sessions_table.sql	/^  sendersubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.session_qualifier	_sql/mssql/quickfix_database.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+sessions.session_qualifier	_sql/mysql/sessions_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+sessions.session_qualifier	_sql/oracle/sessions_table.sql	/^  session_qualifier VARCHAR2(64) NOT NULL,$/;"	F
+sessions.session_qualifier	_sql/postgresql/sessions_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+sessions.session_qualifier	_sql/sqlite3/sessions_table.sql	/^  session_qualifier VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetcompid	_sql/mssql/quickfix_database.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetcompid	_sql/mysql/sessions_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetcompid	_sql/oracle/sessions_table.sql	/^  targetcompid VARCHAR2(64) NOT NULL,$/;"	F
+sessions.targetcompid	_sql/postgresql/sessions_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetcompid	_sql/sqlite3/sessions_table.sql	/^  targetcompid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetlocid	_sql/mssql/quickfix_database.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetlocid	_sql/mysql/sessions_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetlocid	_sql/oracle/sessions_table.sql	/^  targetlocid VARCHAR2(64) NOT NULL,$/;"	F
+sessions.targetlocid	_sql/postgresql/sessions_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetlocid	_sql/sqlite3/sessions_table.sql	/^  targetlocid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetsubid	_sql/mssql/quickfix_database.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetsubid	_sql/mysql/sessions_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetsubid	_sql/oracle/sessions_table.sql	/^  targetsubid VARCHAR2(64) NOT NULL,$/;"	F
+sessions.targetsubid	_sql/postgresql/sessions_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+sessions.targetsubid	_sql/sqlite3/sessions_table.sql	/^  targetsubid VARCHAR(64) NOT NULL,$/;"	F
+start	_test/ReflectorClient.rb	/^  def start()$/;"	f
+start	_test/ReflectorServer.rb	/^  def start$/;"	f
+stop	_test/ReflectorClient.rb	/^  def stop()$/;"	f
+stop	_test/SocketServer.rb	/^  def stop$/;"	f	class:SocketServer
+test_compare	_test/ComparatorTestCase.rb	/^  def test_compare$/;"	f	class:ComparatorTestCase
+test_createProcess	_test/RunnerTestCase.rb	/^  def test_createProcess$/;"	f	class:RunnerTestCase
+test_fixify_bang	_test/ReflectorTestCase.rb	/^  def test_fixify_bang$/;"	f	class:ReflectorTestCase
+test_identifyFile	_test/ReflectorTestCase.rb	/^  def test_identifyFile$/;"	f	class:ReflectorTestCase
+test_identifyMessage	_test/ReflectorTestCase.rb	/^  def test_identifyMessage$/;"	f	class:ReflectorTestCase
+test_listen	_test/SocketServerTestCase.rb	/^  def test_listen$/;"	f	class:SocketServerTestCase
+test_parsePatterns	_test/ComparatorTestCase.rb	/^  def test_parsePatterns$/;"	f	class:ComparatorTestCase
+test_readFixMessage	_test/FixParserTestCase.rb	/^  def test_readFixMessage$/;"	f	class:FixParserTestCase
+test_reflectMessages	_test/ReflectorClientTestCase.rb	/^  def test_reflectMessages$/;"	f	class:ReflectorClientTestCase
+test_reflectMessages	_test/ReflectorServerTestCase.rb	/^  def test_reflectMessages$/;"	f	class:ReflectorServerTestCase
+test_timify_and_fixify	_test/ReflectorTestCase.rb	/^  def test_timify_and_fixify$/;"	f	class:ReflectorTestCase
+test_timify_bang	_test/ReflectorTestCase.rb	/^  def test_timify_bang$/;"	f	class:ReflectorTestCase
+timify!	_test/Reflector.rb	/^  def timify!(message)$/;"	f	class:Reflector
+wait	_test/SocketServer.rb	/^  def wait$/;"	f	class:SocketServer
+waitConnectAction	_test/ReflectorServer.rb	/^  def waitConnectAction$/;"	f
+waitConnectAction	_test/ReflectorTestCase.rb	/^    def reflector.waitConnectAction(cid)$/;"	F	class:ReflectorTestCase.test_identifyFile
+waitDisconnectAction	_test/ReflectorTestCase.rb	/^    def reflector.waitDisconnectAction(cid)$/;"	F	class:ReflectorTestCase.test_identifyFile

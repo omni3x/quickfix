@@ -19,7 +19,11 @@ func initField(f field, tag Tag, value []byte) {
 
 func writeField(f field, buffer *bytes.Buffer) {
 	for _, tv := range f {
-		buffer.Write(tv.bytes)
+		if tv.tag == 554 && len(tv.bytes) > 0 {
+			buffer.Write([]byte("*****"))
+		} else {
+			buffer.Write(tv.bytes)
+		}
 	}
 	buffer.Write([]byte("|"))
 }
