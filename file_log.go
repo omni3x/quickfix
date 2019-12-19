@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"strings"
 
 	"github.com/quickfixgo/quickfix/config"
 )
@@ -16,58 +15,66 @@ type fileLog struct {
 }
 
 func (l fileLog) OnIncoming(msg []byte) {
-	msgStr := string(msg)
-	msgTypeIdx := strings.Index(msgStr, "35=")
-	if msgTypeIdx == -1 {
-		// This should never happen
-		l.messageLogger.Print(msgStr)
-		return
-	}
-
-	msgTypeValueIdx := msgTypeIdx + 3
-	msgType := msgStr[msgTypeValueIdx : msgTypeValueIdx+2]
+	msgType := getMsgType(msg)
 	if msgType == "W" || msgType == "X" {
 		return // don't save price data
 	}
-	l.messageLogger.Print(msgStr)
+	l.messageLogger.Print(string(msg))
 }
 
 func (l fileLog) OnOutgoing(msg []byte) {
-	msgStr := string(msg)
-	msgTypeIdx := strings.Index(msgStr, "35=")
-	if msgTypeIdx == -1 {
-		// This should never happen
-		l.messageLogger.Print(msgStr)
-		return
-	}
-
-	msgTypeValueIdx := msgTypeIdx + 3
-	msgType := msgStr[msgTypeValueIdx : msgTypeValueIdx+2]
+	msgType := getMsgType(msg)
 	if msgType == "W" || msgType == "X" {
 		return // don't save price data
 	} else if msgType == "D" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002)
-		msgStr = redactTags([]string{"467", "2001", "2002"}, msgStr)
+		redactTags("467=", msg)
+		redactTags("2001=", msg)
+		redactTags("2002=", msg)
 	} else if msgType == "A" { // Logon: Password (554)
-		msgStr = redactTags([]string{"554"}, msgStr)
+		redactTags("554=", msg)
 	}
-	l.messageLogger.Print(msgStr)
+	l.messageLogger.Print(string(msg))
 }
 
-func redactTags(tags []string, msg string) string {
-	redacted := msg
-	for _, tag := range tags {
-		tagIdx := strings.Index(msg, tag)
-		if tagIdx == -1 {
-			continue
+func getMsgType(msg []byte) string {
+	var msgType string
+	for i, c := range msg {
+		if c == '3' && i+3 < len(msg) {
+			if msg[i+1] == '5' && msg[i+2] == '=' {
+				v := msg[i+3]
+				for v != 1 {
+					msgType += string(v)
+					i++
+					break
+				}
+			}
 		}
-		replacePos := tagIdx + len(tag) + 1 // +1 is for the = sign after the tag
-		delimIdx := strings.Index(msg[replacePos:], string(1))
-		if delimIdx == -1 {
-			continue // Should not happen
-		}
-		redacted = strings.Replace(redacted, msg[replacePos:replacePos+delimIdx], "******", 1)
 	}
-	return redacted
+	return msgType
+}
+
+func redactTags(tag string, msg []byte) {
+	tagLen := len(tag)
+	for i, c := range msg {
+		if tag[0] == c && i+tagLen < len(msg) {
+			match := true
+			for j, t := range tag[1:] {
+				if byte(t) != msg[i+j+1] {
+					match = false
+					break
+				}
+			}
+			if match {
+				vIdx := i + tagLen
+				v := msg[vIdx]
+				for v != 1 { // 1 is the delimiter ascii value
+					msg[vIdx] = '*'
+					vIdx++
+					v = msg[vIdx]
+				}
+			}
+		}
+	}
 }
 
 func (l fileLog) OnEvent(msg string) {
