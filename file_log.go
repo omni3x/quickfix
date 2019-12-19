@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/quickfixgo/quickfix/config"
 )
@@ -15,11 +16,58 @@ type fileLog struct {
 }
 
 func (l fileLog) OnIncoming(msg []byte) {
-	l.messageLogger.Print(string(msg))
+	msgStr := string(msg)
+	msgTypeIdx := strings.Index(msgStr, "35=")
+	if msgTypeIdx == -1 {
+		// This should never happen
+		l.messageLogger.Print(msgStr)
+		return
+	}
+
+	msgTypeValueIdx := msgTypeIdx + 3
+	msgType := msgStr[msgTypeValueIdx : msgTypeValueIdx+2]
+	if msgType == "W" || msgType == "X" {
+		return // don't save price data
+	}
+	l.messageLogger.Print(msgStr)
 }
 
 func (l fileLog) OnOutgoing(msg []byte) {
-	l.messageLogger.Print(string(msg))
+	msgStr := string(msg)
+	msgTypeIdx := strings.Index(msgStr, "35=")
+	if msgTypeIdx == -1 {
+		// This should never happen
+		l.messageLogger.Print(msgStr)
+		return
+	}
+
+	msgTypeValueIdx := msgTypeIdx + 3
+	msgType := msgStr[msgTypeValueIdx : msgTypeValueIdx+2]
+	if msgType == "W" || msgType == "X" {
+		return // don't save price data
+	} else if msgType == "D" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002)
+		msgStr = redactTags([]string{"467", "2001", "2002"}, msgStr)
+	} else if msgType == "A" { // Logon: Password (554)
+		msgStr = redactTags([]string{"554"}, msgStr)
+	}
+	l.messageLogger.Print(msgStr)
+}
+
+func redactTags(tags []string, msg string) string {
+	redacted := msg
+	for _, tag := range tags {
+		tagIdx := strings.Index(msg, tag)
+		if tagIdx == -1 {
+			continue
+		}
+		replacePos := tagIdx + len(tag) + 1 // +1 is for the = sign after the tag
+		delimIdx := strings.Index(msg[replacePos:], "\001")
+		if delimIdx == -1 {
+			continue // Should not happen
+		}
+		redacted = strings.Replace(redacted, msg[replacePos:delimIdx+1], "******", 1)
+	}
+	return redacted
 }
 
 func (l fileLog) OnEvent(msg string) {
