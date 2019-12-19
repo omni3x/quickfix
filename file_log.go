@@ -46,10 +46,8 @@ func getMsgType(msg []byte) string {
 	for i, c := range msg {
 		if c == '3' && i+3 < len(msg) {
 			if msg[i+1] == '5' && msg[i+2] == '=' {
-				v := msg[i+3]
-				for v != delim {
+				for v := msg[i+3]; v != delim; i++ {
 					msgType += string(v)
-					i++
 					break
 				}
 			}
@@ -69,8 +67,7 @@ func redactTags(tags map[string]bool, msg []byte) {
 				parsedTag := string(msg[i+1 : newIdx])
 				if _, ok := tags[parsedTag]; ok {
 					newIdx++ // skip past = sign
-					v := msg[newIdx]
-					for v != delim {
+					for v := msg[newIdx]; v != delim; {
 						msg[newIdx] = '*'
 						newIdx++
 						v = msg[newIdx]
