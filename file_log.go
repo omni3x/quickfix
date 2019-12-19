@@ -16,6 +16,11 @@ type fileLog struct {
 
 const delim byte = 1
 
+var (
+	newOrderSingleRedactions = map[string]bool{"467": true, "2001": true, "2002": true}
+	logonRedactions          = map[string]bool{"554": true}
+)
+
 func (l fileLog) OnIncoming(msg []byte) {
 	msgType := getMsgType(msg)
 	if msgType == "W" || msgType == "X" {
@@ -29,11 +34,9 @@ func (l fileLog) OnOutgoing(msg []byte) {
 	if msgType == "W" || msgType == "X" {
 		return // don't save price data
 	} else if msgType == "D" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002)
-		redactTags("467", msg)
-		redactTags("2001", msg)
-		redactTags("2002", msg)
+		redactTags(newOrderSingleRedactions, msg)
 	} else if msgType == "A" { // Logon: Password (554)
-		redactTags("554", msg)
+		redactTags(logonRedactions, msg)
 	}
 	l.messageLogger.Print(string(msg))
 }
@@ -55,7 +58,7 @@ func getMsgType(msg []byte) string {
 	return msgType
 }
 
-func redactTags(tag string, msg []byte) {
+func redactTags(tags map[string]bool, msg []byte) {
 	for i, c := range msg {
 		if c != delim {
 			continue // Always start parsing at a delimiter
@@ -63,8 +66,8 @@ func redactTags(tag string, msg []byte) {
 		for j, t := range msg[i:] {
 			if t == '=' {
 				newIdx := i + j
-				parsedTag := msg[i+1 : newIdx]
-				if string(parsedTag) == tag {
+				parsedTag := string(msg[i+1 : newIdx])
+				if _, ok := tags[parsedTag]; ok {
 					newIdx++ // skip past = sign
 					v := msg[newIdx]
 					for v != delim {
