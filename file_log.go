@@ -14,6 +14,8 @@ type fileLog struct {
 	messageLogger *log.Logger
 }
 
+const delim byte = 1
+
 func (l fileLog) OnIncoming(msg []byte) {
 	msgType := getMsgType(msg)
 	if msgType == "W" || msgType == "X" {
@@ -27,11 +29,11 @@ func (l fileLog) OnOutgoing(msg []byte) {
 	if msgType == "W" || msgType == "X" {
 		return // don't save price data
 	} else if msgType == "D" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002)
-		redactTags("467=", msg)
-		redactTags("2001=", msg)
-		redactTags("2002=", msg)
+		redactTags("467", msg)
+		redactTags("2001", msg)
+		redactTags("2002", msg)
 	} else if msgType == "A" { // Logon: Password (554)
-		redactTags("554=", msg)
+		redactTags("554", msg)
 	}
 	l.messageLogger.Print(string(msg))
 }
@@ -42,7 +44,7 @@ func getMsgType(msg []byte) string {
 		if c == '3' && i+3 < len(msg) {
 			if msg[i+1] == '5' && msg[i+2] == '=' {
 				v := msg[i+3]
-				for v != 1 {
+				for v != delim {
 					msgType += string(v)
 					i++
 					break
@@ -54,23 +56,23 @@ func getMsgType(msg []byte) string {
 }
 
 func redactTags(tag string, msg []byte) {
-	tagLen := len(tag)
 	for i, c := range msg {
-		if tag[0] == c && i+tagLen < len(msg) {
-			match := true
-			for j, t := range tag[1:] {
-				if byte(t) != msg[i+j+1] {
-					match = false
-					break
-				}
-			}
-			if match {
-				vIdx := i + tagLen
-				v := msg[vIdx]
-				for v != 1 { // 1 is the delimiter ascii value
-					msg[vIdx] = '*'
-					vIdx++
-					v = msg[vIdx]
+		if c != delim {
+			continue // Always start parsing at a delimiter
+		}
+		for j, t := range msg[i:] {
+			if t == '=' {
+				newIdx := i + j
+				parsedTag := msg[i+1 : newIdx]
+				if string(parsedTag) == tag {
+					newIdx++ // skip past = sign
+					v := msg[newIdx]
+					for v != delim {
+						msg[newIdx] = '*'
+						newIdx++
+						v = msg[newIdx]
+					}
+					break // break instead of return to replace duplicate tags
 				}
 			}
 		}
