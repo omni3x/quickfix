@@ -128,3 +128,12 @@ func TestFileLog_Append(t *testing.T) {
 		t.Error("Unexpected EOF")
 	}
 }
+
+func TestRedactTags(t *testing.T) {
+	logon := "8=FIXT.1.19=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=x%hvFtF9xjpE1137=910=054"
+	expectedLogon := "8=FIXT.1.19=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=******1137=910=054"
+	redactedLogon := redactTags([]string{"554"}, logon)
+	if expectedLogon != redactedLogon {
+		t.Errorf("Incorrected Redaction. Received: %s. Expected: %s", redactedLogon, expectedLogon)
+	}
+}

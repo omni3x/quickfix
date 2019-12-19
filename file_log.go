@@ -61,11 +61,11 @@ func redactTags(tags []string, msg string) string {
 			continue
 		}
 		replacePos := tagIdx + len(tag) + 1 // +1 is for the = sign after the tag
-		delimIdx := strings.Index(msg[replacePos:], "\001")
+		delimIdx := strings.Index(msg[replacePos:], string(1))
 		if delimIdx == -1 {
 			continue // Should not happen
 		}
-		redacted = strings.Replace(redacted, msg[replacePos:delimIdx+1], "******", 1)
+		redacted = strings.Replace(redacted, msg[replacePos:replacePos+delimIdx], "******", 1)
 	}
 	return redacted
 }
