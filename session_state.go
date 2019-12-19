@@ -11,6 +11,7 @@ type stateMachine struct {
 	State                 sessionState
 	pendingStop, stopped  bool
 	notifyOnInSessionTime chan interface{}
+	logMsgBuffer          []byte
 }
 
 func (sm *stateMachine) Start(s *session) {
@@ -72,7 +73,15 @@ func (sm *stateMachine) Incoming(session *session, m fixIn) {
 		return
 	}
 
-	session.log.OnIncoming(m.bytes.Bytes())
+	msgLen := len(m.bytes.Bytes())
+	if len(sm.logMsgBuffer) < msgLen {
+		sm.logMsgBuffer = make([]byte, msgLen)
+	}
+	// We copy the msg buffer so we can log it out before parsing
+	// Since we modify it when it is logged
+	copy(sm.logMsgBuffer, m.bytes.Bytes())
+
+	session.log.OnIncoming(sm.logMsgBuffer[:msgLen])
 
 	msg := session.messagePool.Get()
 	if err := ParseMessageWithDataDictionary(msg, m.bytes, session.transportDataDictionary, session.appDataDictionary); err != nil {

@@ -25,6 +25,7 @@ func (l fileLog) OnIncoming(msg []byte) {
 	if msgType == "W" || msgType == "X" {
 		return // don't save price data
 	}
+	replaceDelimiter(msg)
 	l.messageLogger.Print(string(msg))
 }
 
@@ -35,7 +36,17 @@ func (l fileLog) OnOutgoing(msg []byte) {
 	} else if msgType == "D" || msgType == "A" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002) | LOGON: Password (554)
 		redactTags(redacted, msg)
 	}
+	replaceDelimiter(msg)
 	l.messageLogger.Print(string(msg))
+}
+
+// replaceDelimiter iterates through message and replaces every instance of the delimiter with pipe character: |
+func replaceDelimiter(msg []byte) {
+	for i, c := range msg {
+		if c == delim {
+			msg[i] = '|'
+		}
+	}
 }
 
 // getMsgType returns the Message Type of the inputted FIX Message as a string
