@@ -14,12 +14,76 @@ type fileLog struct {
 	messageLogger *log.Logger
 }
 
+const delim byte = 1
+
+var (
+	redacted = map[string]bool{"467": true, "2001": true, "2002": true, "554": true}
+)
+
 func (l fileLog) OnIncoming(msg []byte) {
+	msgType := getMsgType(msg)
+	if msgType == "W" || msgType == "X" {
+		return // don't save price data
+	}
 	l.messageLogger.Print(string(msg))
 }
 
 func (l fileLog) OnOutgoing(msg []byte) {
+	msgType := getMsgType(msg)
+	if msgType == "W" || msgType == "X" {
+		return // don't save price data
+	} else if msgType == "D" || msgType == "A" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002) | LOGON: Password (554)
+		redactTags(redacted, msg)
+	}
 	l.messageLogger.Print(string(msg))
+}
+
+// getMsgType returns the Message Type of the inputted FIX Message as a string
+func getMsgType(msg []byte) string {
+	for i, c := range msg {
+		if c != delim {
+			continue // Always start parsing at a delimiter
+		}
+		for j, t := range msg[i:] {
+			if t == '=' {
+				newIdx := i + j
+				parsedTag := string(msg[i+1 : newIdx])
+				if parsedTag == "35" {
+					for k, v := range msg[newIdx:] {
+						if v == delim {
+							return string(msg[newIdx+1 : i+j+k])
+						}
+					}
+				}
+				break // If tag does not match continue processing
+			}
+		}
+	}
+	return ""
+}
+
+// redactTags modifies the message to remove the FIX Values of the tags that exists as keys in the inputted tags
+func redactTags(tags map[string]bool, msg []byte) {
+	for i, c := range msg {
+		if c != delim {
+			continue // Always start parsing at a delimiter
+		}
+		for j, t := range msg[i:] {
+			if t == '=' {
+				newIdx := i + j
+				parsedTag := string(msg[i+1 : newIdx])
+				if _, ok := tags[parsedTag]; ok {
+					newIdx++ // skip past = sign
+					for v := msg[newIdx]; v != delim; {
+						msg[newIdx] = '*'
+						newIdx++
+						v = msg[newIdx]
+					}
+					break // break instead of return to replace duplicate tags
+				}
+			}
+		}
+	}
 }
 
 func (l fileLog) OnEvent(msg string) {

@@ -27,6 +27,8 @@ type session struct {
 	//mutex for access to toSend
 	sendMutex sync.Mutex
 
+	logMsgBuffer []byte
+
 	sessionEvent chan internal.Event
 	messageEvent chan bool
 	application  Application
@@ -343,8 +345,14 @@ func (s *session) dropQueued() {
 }
 
 func (s *session) sendBytes(msg []byte) {
-	s.log.OnOutgoing(msg)
+	if len(s.logMsgBuffer) < len(msg) {
+		s.logMsgBuffer = make([]byte, len(msg))
+	}
+	// We copy the msg buffer so we can log it out after sending
+	// since sending modifies the msg buffer
+	copy(s.logMsgBuffer, msg)
 	s.messageOut <- msg
+	s.log.OnOutgoing(s.logMsgBuffer[:len(msg)])
 	s.stateTimer.Reset(s.HeartBtInt)
 }
 
