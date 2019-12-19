@@ -55,7 +55,7 @@ func getMsgType(msg []byte) string {
 						}
 					}
 				}
-				break
+				break // If tag does not match continue processing
 			}
 		}
 	}
