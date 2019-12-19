@@ -165,3 +165,12 @@ func TestRedactTags(t *testing.T) {
 		t.Errorf("Incorrect NewOrderSingle 2001= Redaction\nReceived: %s\nExpected: %s", string(newOrder), string(expectedNewOrder))
 	}
 }
+
+func TestRedactWithMissingTag(t *testing.T) {
+	logon := []byte("8=FIXT.1.19=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=x%hvFtF9xjpE1137=910=054")
+	expectedLogon := []byte("8=FIXT.1.19=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=x%hvFtF9xjpE1137=910=054")
+	redactTags("2001=", logon)
+	if string(expectedLogon) != string(logon) {
+		t.Errorf("Incorrect Logon 554= Redaction.\nReceived: %s\nExpected: %s", string(logon), string(expectedLogon))
+	}
+}
