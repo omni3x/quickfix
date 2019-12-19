@@ -32,7 +32,7 @@ func (l fileLog) OnOutgoing(msg []byte) {
 	msgType := getMsgType(msg)
 	if msgType == "W" || msgType == "X" {
 		return // don't save price data
-	} else if msgType == "D" || msgType == "A" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002)
+	} else if msgType == "D" || msgType == "A" { // NewOrderSingle: API KEY (467), SECRET (2001), PASS (2002) | LOGON: Password (554)
 		redactTags(redacted, msg)
 	}
 	l.messageLogger.Print(string(msg))
