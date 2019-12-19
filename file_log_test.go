@@ -144,6 +144,15 @@ func TestGetMsgType(t *testing.T) {
 	}
 }
 
+func TestGetMsgTypeWithSameSubstringTag(t *testing.T) {
+	logon := []byte("8=FIXT.1.1335=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=x%hvFtF9xjpE1137=910=054")
+	msgType := "A"
+	output := getMsgType(logon)
+	if msgType != output {
+		t.Errorf("Failed to get correct msgType\nReceived: %s\nExpected: %s", output, msgType)
+	}
+}
+
 func TestRedactTags(t *testing.T) {
 	logon := []byte("8=FIXT.1.19=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=x%hvFtF9xjpE1137=910=054")
 	expectedLogon := []byte("8=FIXT.1.19=11835=A34=249=demo-1-taker52=20191218-23:15:42.24156=OmniexFeed98=0108=30553=demo-1-taker554=************1137=910=054")
