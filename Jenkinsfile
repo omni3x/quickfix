@@ -39,12 +39,14 @@ pipeline {
           minor = versions[1]
           patch = versions[2]
 
+          echo "Building Docker Image"
           dockerImage = docker.build("$registry:latest", "--build-arg GITHUB_TOKEN=$GITHUB_TOKEN .")
+          echo "Built Docker Image"
         }
       }
     }
 
-    stage('Publish') {
+    stage('Publish Tags Only') {
       agent any
       when {
         expression {
@@ -64,12 +66,6 @@ pipeline {
             new_minor++
 
             tag = "${major}.${new_minor}.0"
-          }
-
-          // Push to Docker
-          docker.withRegistry('', registryCredential) {
-            dockerImage.push()
-            dockerImage.push(tag)
           }
 
           // Push to Github
