@@ -1,12 +1,7 @@
-FROM golang:1.13-alpine as build
-
-ARG GITHUB_TOKEN
-ENV GITHUB_TOKEN $GITHUB_TOKEN
+FROM golang:1.13-alpine
 
 RUN apk update &&\
     apk add --no-cache git build-base
-
-RUN git config --system url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
 WORKDIR /home/app
 
