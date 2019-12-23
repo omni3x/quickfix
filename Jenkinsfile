@@ -3,7 +3,7 @@ pipeline {
   agent any
 
   options {
-      timeout(time: 10, unit: 'MINUTES')
+      timeout(time: 5, unit: 'MINUTES')
       timestamps()
   }
   
@@ -39,7 +39,9 @@ pipeline {
           minor = versions[1]
           patch = versions[2]
 
+          echo "Building Docker Image"
           dockerImage = docker.build("$registry:latest", "--build-arg GITHUB_TOKEN=$GITHUB_TOKEN .")
+          echo "Built Docker Image"
         }
       }
     }
