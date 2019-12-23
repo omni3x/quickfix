@@ -44,7 +44,7 @@ pipeline {
       }
     }
 
-    stage('Publish') {
+    stage('Publish Tags Only') {
       agent any
       when {
         expression {
@@ -64,12 +64,6 @@ pipeline {
             new_minor++
 
             tag = "${major}.${new_minor}.0"
-          }
-
-          // Push to Docker
-          docker.withRegistry('', registryCredential) {
-            dockerImage.push()
-            dockerImage.push(tag)
           }
 
           // Push to Github
