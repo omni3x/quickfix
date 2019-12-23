@@ -8,18 +8,9 @@ RUN apk update &&\
 
 RUN git config --system url."https://$GITHUB_TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
-RUN adduser -D -g '' app
-
-WORKDIR /home/app
-
-COPY go.mod go.sum ./
-
 # Pull dependencies, if mod/sum aren't changed then this is cached
 RUN go mod download
 RUN go mod verify
 
-COPY . .
-
 RUN go test
-RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s"
 
