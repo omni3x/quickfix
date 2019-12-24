@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"strings"
 	"time"
 
 	"github.com/quickfixgo/quickfix/datadictionary"
@@ -352,10 +353,12 @@ func extractField(parsedFieldBytes *TagValue, buffer []byte) (remBytes []byte, e
 
 func (m *Message) String() string {
 	if m.rawMessage != nil {
-		return m.rawMessage.String()
+		return strings.ReplaceAll(m.rawMessage.String(), string(1), "|")
 	}
 
-	return string(m.build())
+	msg := m.build()
+	replaceDelimiter(msg)
+	return string(msg)
 }
 
 func formatCheckSum(value int) string {
