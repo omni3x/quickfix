@@ -74,6 +74,8 @@ func (c MessageRouter) tryRoute(beginString string, msgType string, msg *Message
 			fixVersion = BeginStringFIX43
 		case ApplVerIDFIX44:
 			fixVersion = BeginStringFIX44
+		case ApplVerIDFIX50SP2:
+			fixVersion = BeginStringFIX50
 		default:
 			fixVersion = string(applVerID)
 		}
