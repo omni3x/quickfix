@@ -11,11 +11,13 @@ type screenLog struct {
 
 func (l screenLog) OnIncoming(s []byte) {
 	logTime := time.Now().UTC()
+	replaceDelimiter(s)
 	fmt.Printf("<%v, %s, incoming>\n  (%s)\n", logTime, l.prefix, s)
 }
 
 func (l screenLog) OnOutgoing(s []byte) {
 	logTime := time.Now().UTC()
+	replaceDelimiter(s)
 	fmt.Printf("<%v, %s, outgoing>\n  (%s)\n", logTime, l.prefix, s)
 }
 
