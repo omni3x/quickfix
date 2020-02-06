@@ -3,6 +3,7 @@ package quickfix
 import (
 	"bufio"
 	"crypto/tls"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -86,6 +87,7 @@ func NewInitiator(app Application, storeFactory MessageStoreFactory, appSettings
 			return nil, err
 		}
 
+		fmt.Println(session.SessionSettings)
 		i.sessions[sessionID] = session
 	}
 
