@@ -87,7 +87,7 @@ func NewInitiator(app Application, storeFactory MessageStoreFactory, appSettings
 			return nil, err
 		}
 
-		fmt.Println(session.SessionSettings)
+		fmt.Println("SESSION: %s SETTINGS: %v", sessionID, session.SessionSettings)
 		i.sessions[sessionID] = session
 	}
 
