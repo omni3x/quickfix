@@ -21,10 +21,10 @@ var (
 )
 
 func (l fileLog) OnIncoming(msg []byte) {
-	msgType := getMsgType(msg)
-	if msgType == "W" || msgType == "X" {
-		return // don't save price data
-	}
+	// msgType := getMsgType(msg)
+	// if msgType == "W" || msgType == "X" {
+	// 	return // don't save price data
+	// }
 	replaceDelimiter(msg)
 	l.messageLogger.Print(string(msg))
 }
