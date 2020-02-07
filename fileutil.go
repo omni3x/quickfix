@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"syscall"
 )
 
 func sessionIDFilenamePrefix(s SessionID) string {
@@ -59,4 +60,23 @@ func openOrCreateFile(fname string, perm os.FileMode) (f *os.File, err error) {
 		}
 	}
 	return f, nil
+}
+
+// MmapFile represents a memory mapped file
+type MmapFile struct {
+	FilePtr *os.File
+	Buffer  []byte
+}
+
+func openOrCreateMmapFile(fname string) (*MmapFile, error) {
+	f, err := openOrCreateFile(fname, 0660)
+	if err != nil {
+		return nil, err
+	}
+	data, err := syscall.Mmap(int(f.Fd()), 0, syscall.Getpagesize(), syscall.PROT_NONE, syscall.MAP_ANON|syscall.MAP_PRIVATE)
+	return &MmapFile{FilePtr: f, Buffer: data}, err
+}
+
+func closeMmapFile(mf *MmapFile) error {
+	return closeFile(mf.FilePtr)
 }
