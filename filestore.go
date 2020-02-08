@@ -5,11 +5,12 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"strconv"
 	"time"
 
 	"github.com/quickfixgo/quickfix/config"
 )
+
+const seqnumLength = 19
 
 type msgDef struct {
 	offset int64
@@ -32,8 +33,8 @@ type fileStore struct {
 	bodyFile           *os.File
 	headerFile         *os.File
 	sessionFile        *os.File
-	senderSeqNumsFile  *MmapFile
-	targetSeqNumsFile  *MmapFile
+	senderSeqNumsFile  *SeqnumFile
+	targetSeqNumsFile  *SeqnumFile
 }
 
 // NewFileStoreFactory returns a file-based implementation of MessageStoreFactory
@@ -69,7 +70,9 @@ func newFileStore(sessionID SessionID, dirname string) (*fileStore, error) {
 		headerFname:        path.Join(dirname, fmt.Sprintf("%s.%s", sessionPrefix, "header")),
 		sessionFname:       path.Join(dirname, fmt.Sprintf("%s.%s", sessionPrefix, "session")),
 		senderSeqNumsFname: path.Join(dirname, fmt.Sprintf("%s.%s", sessionPrefix, "senderseqnums")),
+		senderSeqNumsFile:  &SeqnumFile{},
 		targetSeqNumsFname: path.Join(dirname, fmt.Sprintf("%s.%s", sessionPrefix, "targetseqnums")),
+		targetSeqNumsFile:  &SeqnumFile{},
 	}
 
 	if err := store.Refresh(); err != nil {
@@ -125,10 +128,12 @@ func (store *fileStore) Refresh() (err error) {
 	if store.sessionFile, err = openOrCreateFile(store.sessionFname, 0660); err != nil {
 		return err
 	}
-	if store.senderSeqNumsFile, err = openOrCreateMmapFile(store.senderSeqNumsFname); err != nil {
+	// length matches the string format for writing out seqnums
+	if err = store.senderSeqNumsFile.Init(store.senderSeqNumsFname, seqnumLength); err != nil {
 		return err
 	}
-	if store.targetSeqNumsFile, err = openOrCreateMmapFile(store.targetSeqNumsFname); err != nil {
+	// length matches the string format for writing out seqnums
+	if err = store.targetSeqNumsFile.Init(store.targetSeqNumsFname, seqnumLength); err != nil {
 		return err
 	}
 
@@ -163,15 +168,14 @@ func (store *fileStore) populateCache() (creationTimePopulated bool, err error) 
 			creationTimePopulated = true
 		}
 	}
-
-	if senderSeqNumBytes, err := ioutil.ReadFile(store.senderSeqNumsFname); err == nil {
-		if senderSeqNum, err := strconv.Atoi(string(senderSeqNumBytes)); err == nil {
+	if store.senderSeqNumsFile != nil {
+		if senderSeqNum, err := store.senderSeqNumsFile.Read(); err == nil {
 			store.cache.SetNextSenderMsgSeqNum(senderSeqNum)
 		}
 	}
 
-	if targetSeqNumBytes, err := ioutil.ReadFile(store.targetSeqNumsFname); err == nil {
-		if targetSeqNum, err := strconv.Atoi(string(targetSeqNumBytes)); err == nil {
+	if store.targetSeqNumsFile != nil {
+		if targetSeqNum, err := store.targetSeqNumsFile.Read(); err == nil {
 			store.cache.SetNextTargetMsgSeqNum(targetSeqNum)
 		}
 	}
@@ -210,10 +214,6 @@ func (store *fileStore) setSeqNum(f *os.File, seqNum int) error {
 	return nil
 }
 
-func (store *fileStore) setSeqNumMmap(mf *MmapFile, seqnum int) {
-	copy(mf.Buffer, []byte(strconv.Itoa(seqnum)))
-}
-
 // NextSenderMsgSeqNum returns the next MsgSeqNum that will be sent
 func (store *fileStore) NextSenderMsgSeqNum() int {
 	return store.cache.NextSenderMsgSeqNum()
@@ -227,33 +227,25 @@ func (store *fileStore) NextTargetMsgSeqNum() int {
 // SetNextSenderMsgSeqNum sets the next MsgSeqNum that will be sent
 func (store *fileStore) SetNextSenderMsgSeqNum(next int) error {
 	store.cache.SetNextSenderMsgSeqNum(next)
-	store.setSeqNumMmap(store.senderSeqNumsFile, next)
-	return nil
-	// return store.setSeqNum(store.senderSeqNumsFile, next)
+	return store.senderSeqNumsFile.Write(next)
 }
 
 // SetNextTargetMsgSeqNum sets the next MsgSeqNum that should be received
 func (store *fileStore) SetNextTargetMsgSeqNum(next int) error {
 	store.cache.SetNextTargetMsgSeqNum(next)
-	store.setSeqNumMmap(store.targetSeqNumsFile, next)
-	return nil
-	// return store.setSeqNum(store.targetSeqNumsFile, next)
+	return store.targetSeqNumsFile.Write(next)
 }
 
 // IncrNextSenderMsgSeqNum increments the next MsgSeqNum that will be sent
 func (store *fileStore) IncrNextSenderMsgSeqNum() error {
 	store.cache.IncrNextSenderMsgSeqNum()
-	store.setSeqNumMmap(store.senderSeqNumsFile, store.cache.NextSenderMsgSeqNum())
-	return nil
-	// return store.setSeqNum(store.senderSeqNumsFile, store.cache.NextSenderMsgSeqNum())
+	return store.senderSeqNumsFile.Write(store.cache.NextSenderMsgSeqNum())
 }
 
 // IncrNextTargetMsgSeqNum increments the next MsgSeqNum that should be received
 func (store *fileStore) IncrNextTargetMsgSeqNum() error {
 	store.cache.IncrNextTargetMsgSeqNum()
-	store.setSeqNumMmap(store.targetSeqNumsFile, store.cache.NextTargetMsgSeqNum())
-	// return store.setSeqNum(store.targetSeqNumsFile, store.cache.NextTargetMsgSeqNum())
-	return nil
+	return store.targetSeqNumsFile.Write(store.cache.NextTargetMsgSeqNum())
 }
 
 // CreationTime returns the creation time of the store
@@ -326,18 +318,16 @@ func (store *fileStore) Close() error {
 	if err := closeFile(store.sessionFile); err != nil {
 		return err
 	}
-	if err := closeMmapFile(store.senderSeqNumsFile); err != nil {
+	if err := store.senderSeqNumsFile.Close(); err != nil {
 		return err
 	}
-	if err := closeMmapFile(store.targetSeqNumsFile); err != nil {
+	if err := store.targetSeqNumsFile.Close(); err != nil {
 		return err
 	}
 
 	store.bodyFile = nil
 	store.headerFile = nil
 	store.sessionFile = nil
-	store.senderSeqNumsFile = nil
-	store.targetSeqNumsFile = nil
 
 	return nil
 }
