@@ -98,6 +98,8 @@ func (sqnf *SeqnumFile) Init(fname string, length int) error {
 	if err != nil {
 		return err
 	}
+	// write byte array of length we want so the file is big enough to be written to
+	sqnf.mmapfile.Write(make([]byte, length))
 	sqnf.data, err = syscall.Mmap(int(sqnf.mmapfile.Fd()), 0, syscall.Getpagesize(), syscall.PROT_READ|syscall.PROT_WRITE, syscall.MAP_SHARED)
 	if err != nil {
 		return err
