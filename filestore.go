@@ -97,10 +97,10 @@ func (store *fileStore) Reset() error {
 	if err := removeFile(store.sessionFname); err != nil {
 		return err
 	}
-	if err := removeFile(store.senderSeqNumsFname); err != nil {
+	if err := store.senderSeqNumsFile.Reset(); err != nil {
 		return err
 	}
-	if err := removeFile(store.targetSeqNumsFname); err != nil {
+	if err := store.targetSeqNumsFile.Reset(); err != nil {
 		return err
 	}
 	return store.Refresh()

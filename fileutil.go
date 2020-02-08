@@ -109,10 +109,19 @@ func (sqnf *SeqnumFile) Init(fname string, length int) error {
 	return nil
 }
 
+// Reset resets the seqnum file
+func (sqnf *SeqnumFile) Reset() error {
+	return sqnf.Write(1)
+}
+
 // Close closes the SeqnumFile
 func (sqnf *SeqnumFile) Close() error {
 	if sqnf.mmapfile == nil {
 		return nil
 	}
-	return closeFile(sqnf.mmapfile)
+	if err := closeFile(sqnf.mmapfile); err != nil {
+		return err
+	}
+	sqnf.mmapfile = nil
+	return nil
 }
