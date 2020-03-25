@@ -10,8 +10,6 @@ import (
 	"github.com/quickfixgo/quickfix/config"
 )
 
-const seqnumLength = 19
-
 type msgDef struct {
 	offset int64
 	size   int
@@ -128,12 +126,10 @@ func (store *fileStore) Refresh() (err error) {
 	if store.sessionFile, err = openOrCreateFile(store.sessionFname, 0660); err != nil {
 		return err
 	}
-	// length matches the string format for writing out seqnums
-	if err = store.senderSeqNumsFile.Init(store.senderSeqNumsFname, seqnumLength); err != nil {
+	if err = store.senderSeqNumsFile.Init(store.senderSeqNumsFname); err != nil {
 		return err
 	}
-	// length matches the string format for writing out seqnums
-	if err = store.targetSeqNumsFile.Init(store.targetSeqNumsFname, seqnumLength); err != nil {
+	if err = store.targetSeqNumsFile.Init(store.targetSeqNumsFname); err != nil {
 		return err
 	}
 
@@ -169,13 +165,13 @@ func (store *fileStore) populateCache() (creationTimePopulated bool, err error) 
 		}
 	}
 	if store.senderSeqNumsFile != nil {
-		if senderSeqNum, err := store.senderSeqNumsFile.Read(); err == nil {
+		if senderSeqNum, err := store.senderSeqNumsFile.ReadExistingFile(store.senderSeqNumsFname); err == nil {
 			store.cache.SetNextSenderMsgSeqNum(senderSeqNum)
 		}
 	}
 
 	if store.targetSeqNumsFile != nil {
-		if targetSeqNum, err := store.targetSeqNumsFile.Read(); err == nil {
+		if targetSeqNum, err := store.targetSeqNumsFile.ReadExistingFile(store.targetSeqNumsFname); err == nil {
 			store.cache.SetNextTargetMsgSeqNum(targetSeqNum)
 		}
 	}

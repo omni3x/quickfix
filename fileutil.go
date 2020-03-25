@@ -63,12 +63,26 @@ func openOrCreateFile(fname string, perm os.FileMode) (f *os.File, err error) {
 	return f, nil
 }
 
+// seqNumFileLength should be the same as the format string that is used for the SeqnumFile
+const seqNumFileLength = 19
+
 // SeqnumFile represents a memory mapped file storing seqnums
 type SeqnumFile struct {
 	mmapfile *os.File
 	length   int
 	data     []byte //mmaped slice
 	tmp      []byte //tmp buf to read/write to
+}
+
+// ReadExistingFile will intialize the SeqnumFile if the backing file already exists, otherwise it will error out
+func (sqnf *SeqnumFile) ReadExistingFile(fname string) (int, error) {
+	if _, err := os.Stat(fname); os.IsNotExist(err) {
+		return -1, err
+	}
+	if err := sqnf.Init(fname); err != nil {
+		return -1, err
+	}
+	return sqnf.Read()
 }
 
 // Read reads the seqnum
@@ -92,7 +106,7 @@ func (sqnf *SeqnumFile) Write(seqnum int) error {
 }
 
 // Init initializes the seqnum file to open or create the file at fname with length length
-func (sqnf *SeqnumFile) Init(fname string, length int) error {
+func (sqnf *SeqnumFile) Init(fname string) error {
 	var err error
 	sqnf.mmapfile, err = openOrCreateFile(fname, 0660)
 	if err != nil {
@@ -104,6 +118,7 @@ func (sqnf *SeqnumFile) Init(fname string, length int) error {
 	}
 
 	// write byte array of length we want so the file is big enough to be written to
+	length := seqNumFileLength
 	if fi.Size() < int64(length) {
 		sqnf.mmapfile.Write(make([]byte, length))
 	}
