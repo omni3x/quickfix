@@ -78,17 +78,18 @@ func newSQLStore(sessionID SessionID, driver string, dataSourceName string, conn
 // Reset deletes the store records and sets the seqnums back to 1
 func (store *sqlStore) Reset() error {
 	s := store.sessionID
-	_, err := store.db.Exec(`DELETE FROM messages
-		WHERE beginstring=? AND session_qualifier=?
-		AND sendercompid=? AND sendersubid=? AND senderlocid=?
-		AND targetcompid=? AND targetsubid=? AND targetlocid=?`,
-		s.BeginString, s.Qualifier,
-		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
-		s.TargetCompID, s.TargetSubID, s.TargetLocationID)
-	if err != nil {
-		return err
-	}
+	// _, err := store.db.Exec(`DELETE FROM messages
+	// 	WHERE beginstring=? AND session_qualifier=?
+	// 	AND sendercompid=? AND sendersubid=? AND senderlocid=?
+	// 	AND targetcompid=? AND targetsubid=? AND targetlocid=?`,
+	// 	s.BeginString, s.Qualifier,
+	// 	s.SenderCompID, s.SenderSubID, s.SenderLocationID,
+	// 	s.TargetCompID, s.TargetSubID, s.TargetLocationID)
+	// if err != nil {
+	// 	return err
+	// }
 
+	var err error
 	if err = store.cache.Reset(); err != nil {
 		return err
 	}
@@ -96,8 +97,8 @@ func (store *sqlStore) Reset() error {
 	_, err = store.db.Exec(`UPDATE sessions
 		SET creation_time=$1, incoming_seqnum=$2, outgoing_seqnum=$3
 		WHERE beginstring=$4 AND session_qualifier=$5
-		AND sendercompid=$7 AND sendersubid=$8 AND senderlocid=$9
-		AND targetcompid=$10 AND targetsubid=$11 AND targetlocid=$12`,
+		AND sendercompid=$6 AND sendersubid=$7 AND senderlocid=$8
+		AND targetcompid=$9 AND targetsubid=$10 AND targetlocid=$11`,
 		store.cache.CreationTime(), store.cache.NextTargetMsgSeqNum(), store.cache.NextSenderMsgSeqNum(),
 		s.BeginString, s.Qualifier,
 		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
@@ -179,6 +180,7 @@ func (store *sqlStore) SetNextSenderMsgSeqNum(next int) error {
 		next, s.BeginString, s.Qualifier,
 		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
 		s.TargetCompID, s.TargetSubID, s.TargetLocationID)
+
 	if err != nil {
 		return err
 	}
@@ -195,6 +197,7 @@ func (store *sqlStore) SetNextTargetMsgSeqNum(next int) error {
 		next, s.BeginString, s.Qualifier,
 		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
 		s.TargetCompID, s.TargetSubID, s.TargetLocationID)
+
 	if err != nil {
 		return err
 	}
