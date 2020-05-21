@@ -81,10 +81,12 @@ func NewInitiator(app Application, storeFactory MessageStoreFactory, appSettings
 	}
 
 	for sessionID, s := range i.sessionSettings {
+		store := storeFactory
+		// We use a memory store for the market data session since we don't need to persist it
 		if sessionID.TargetCompID == "OmniexFeed" {
-			storeFactory = NewMemoryStoreFactory()
+			store = NewMemoryStoreFactory()
 		}
-		session, err := i.createSession(sessionID, storeFactory, s, logFactory, app)
+		session, err := i.createSession(sessionID, store, s, logFactory, app)
 		if err != nil {
 			return nil, err
 		}
