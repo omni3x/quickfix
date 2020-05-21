@@ -81,6 +81,9 @@ func NewInitiator(app Application, storeFactory MessageStoreFactory, appSettings
 	}
 
 	for sessionID, s := range i.sessionSettings {
+		if sessionID.TargetCompID == "OmniexFeed" {
+			storeFactory = NewMemoryStoreFactory()
+		}
 		session, err := i.createSession(sessionID, storeFactory, s, logFactory, app)
 		if err != nil {
 			return nil, err
