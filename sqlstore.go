@@ -3,6 +3,7 @@ package quickfix
 import (
 	"database/sql"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/quickfixgo/quickfix/config"
@@ -52,6 +53,9 @@ func (f sqlStoreFactory) Create(sessionID SessionID) (msgStore MessageStore, err
 	return newSQLStore(sessionID, sqlDriver, sqlDataSourceName, sqlConnMaxLifetime)
 }
 
+var dbOnce sync.Once
+var db *sql.DB
+
 func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration) (store *sqlStore, err error) {
 	isPostgres = driver == "postgres"
 	store = &sqlStore{
@@ -63,10 +67,15 @@ func newSQLStore(sessionID SessionID, driver string, dataSourceName string, conn
 	}
 	store.cache.Reset()
 
-	if store.db, err = sql.Open(store.sqlDriver, store.sqlDataSourceName); err != nil {
-		return nil, err
-	}
-	store.db.SetConnMaxLifetime(store.sqlConnMaxLifetime)
+	// Use the same DB Connection Pool for all users of the SQLStore
+	dbOnce.Do(func() {
+		if db, err = sql.Open(store.sqlDriver, store.sqlDataSourceName); err != nil {
+			panic(err)
+		}
+		db.SetConnMaxLifetime(store.sqlConnMaxLifetime)
+	})
+
+	store.db = db
 
 	if err = store.db.Ping(); err != nil { // ensure immediate connection
 		return nil, err
