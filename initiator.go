@@ -10,7 +10,7 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-var messageBufferChanSize = 1000
+var messageBufferChanSize = 10000
 
 //Initiator initiates connections and processes messages for all sessions.
 type Initiator struct {
