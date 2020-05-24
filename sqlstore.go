@@ -10,17 +10,20 @@ import (
 
 var isPostgres bool
 
+var targetSeqnumUpdateInterval time.Duration = 500 * time.Millisecond
+
 type sqlStoreFactory struct {
 	settings *Settings
 }
 
 type sqlStore struct {
-	sessionID          SessionID
-	cache              *memoryStore
-	sqlDriver          string
-	sqlDataSourceName  string
-	sqlConnMaxLifetime time.Duration
-	db                 *sql.DB
+	sessionID              SessionID
+	cache                  *memoryStore
+	sqlDriver              string
+	sqlDataSourceName      string
+	sqlConnMaxLifetime     time.Duration
+	db                     *sql.DB
+	lastTargetSeqNumUpdate time.Time
 }
 
 // NewSQLStoreFactory returns a sql-based implementation of MessageStoreFactory
@@ -55,11 +58,12 @@ func (f sqlStoreFactory) Create(sessionID SessionID) (msgStore MessageStore, err
 func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration) (store *sqlStore, err error) {
 	isPostgres = driver == "postgres"
 	store = &sqlStore{
-		sessionID:          sessionID,
-		cache:              &memoryStore{},
-		sqlDriver:          driver,
-		sqlDataSourceName:  dataSourceName,
-		sqlConnMaxLifetime: connMaxLifetime,
+		sessionID:              sessionID,
+		cache:                  &memoryStore{},
+		sqlDriver:              driver,
+		sqlDataSourceName:      dataSourceName,
+		sqlConnMaxLifetime:     connMaxLifetime,
+		lastTargetSeqNumUpdate: time.Now(),
 	}
 	store.cache.Reset()
 
@@ -229,23 +233,26 @@ func (store *sqlStore) SetNextSenderMsgSeqNum(next int) error {
 // SetNextTargetMsgSeqNum sets the next MsgSeqNum that should be received
 func (store *sqlStore) SetNextTargetMsgSeqNum(next int) error {
 	s := store.sessionID
-	queryStr := `UPDATE sessions SET incoming_seqnum = $1
+	if time.Since(store.lastTargetSeqNumUpdate) > targetSeqnumUpdateInterval {
+		queryStr := `UPDATE sessions SET incoming_seqnum = $1
 		WHERE beginstring=$2 AND session_qualifier=$3
 		AND sendercompid=$4 AND sendersubid=$5 AND senderlocid=$6
 		AND targetcompid=$7 AND targetsubid=$8 AND targetlocid=$9`
-	if !isPostgres {
-		queryStr = `UPDATE sessions SET incoming_seqnum = ?
+		if !isPostgres {
+			queryStr = `UPDATE sessions SET incoming_seqnum = ?
 		WHERE beginstring=? AND session_qualifier=?
 		AND sendercompid=? AND sendersubid=? AND senderlocid=?
 		AND targetcompid=? AND targetsubid=? AND targetlocid=?`
-	}
-	_, err := store.db.Exec(queryStr,
-		next, s.BeginString, s.Qualifier,
-		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
-		s.TargetCompID, s.TargetSubID, s.TargetLocationID)
+		}
+		_, err := store.db.Exec(queryStr,
+			next, s.BeginString, s.Qualifier,
+			s.SenderCompID, s.SenderSubID, s.SenderLocationID,
+			s.TargetCompID, s.TargetSubID, s.TargetLocationID)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+		store.lastTargetSeqNumUpdate = time.Now()
 	}
 	return store.cache.SetNextTargetMsgSeqNum(next)
 }
