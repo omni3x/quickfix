@@ -11,21 +11,25 @@ import (
 var isPostgres bool
 
 type sqlStoreFactory struct {
-	settings *Settings
+	settings                     *Settings
+	targetSeqNumDebounceInterval time.Duration
 }
 
 type sqlStore struct {
-	sessionID          SessionID
-	cache              *memoryStore
-	sqlDriver          string
-	sqlDataSourceName  string
-	sqlConnMaxLifetime time.Duration
-	db                 *sql.DB
+	sessionID                    SessionID
+	cache                        *memoryStore
+	sqlDriver                    string
+	sqlDataSourceName            string
+	sqlConnMaxLifetime           time.Duration
+	db                           *sql.DB
+	targetSeqNumDebounceInterval time.Duration
+	timeOfLastTargetSeqNumUpdate time.Time
 }
 
-// NewSQLStoreFactory returns a sql-based implementation of MessageStoreFactory
-func NewSQLStoreFactory(settings *Settings) MessageStoreFactory {
-	return sqlStoreFactory{settings: settings}
+// NewSQLStoreFactory returns a sql-based implementation of MessageStoreFactory. targetSeqNumDebounceInterval controls
+// how often the target's seqnum/incoming_seqnum is updated in the DB
+func NewSQLStoreFactory(settings *Settings, targetSeqNumDebounceInterval time.Duration) MessageStoreFactory {
+	return sqlStoreFactory{settings: settings, targetSeqNumDebounceInterval: targetSeqNumDebounceInterval}
 }
 
 // Create creates a new SQLStore implementation of the MessageStore interface
@@ -49,17 +53,19 @@ func (f sqlStoreFactory) Create(sessionID SessionID) (msgStore MessageStore, err
 			return nil, err
 		}
 	}
-	return newSQLStore(sessionID, sqlDriver, sqlDataSourceName, sqlConnMaxLifetime)
+	return newSQLStore(sessionID, sqlDriver, sqlDataSourceName, sqlConnMaxLifetime, f.targetSeqNumDebounceInterval)
 }
 
-func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration) (store *sqlStore, err error) {
+func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration, targetSeqNumDebounceInterval time.Duration) (store *sqlStore, err error) {
 	isPostgres = driver == "postgres"
 	store = &sqlStore{
-		sessionID:          sessionID,
-		cache:              &memoryStore{},
-		sqlDriver:          driver,
-		sqlDataSourceName:  dataSourceName,
-		sqlConnMaxLifetime: connMaxLifetime,
+		sessionID:                    sessionID,
+		cache:                        &memoryStore{},
+		sqlDriver:                    driver,
+		sqlDataSourceName:            dataSourceName,
+		sqlConnMaxLifetime:           connMaxLifetime,
+		targetSeqNumDebounceInterval: targetSeqNumDebounceInterval,
+		timeOfLastTargetSeqNumUpdate: time.Now(),
 	}
 	store.cache.Reset()
 
@@ -229,23 +235,26 @@ func (store *sqlStore) SetNextSenderMsgSeqNum(next int) error {
 // SetNextTargetMsgSeqNum sets the next MsgSeqNum that should be received
 func (store *sqlStore) SetNextTargetMsgSeqNum(next int) error {
 	s := store.sessionID
-	queryStr := `UPDATE sessions SET incoming_seqnum = $1
+	if time.Since(store.timeOfLastTargetSeqNumUpdate) > store.targetSeqNumDebounceInterval {
+		queryStr := `UPDATE sessions SET incoming_seqnum = $1
 		WHERE beginstring=$2 AND session_qualifier=$3
 		AND sendercompid=$4 AND sendersubid=$5 AND senderlocid=$6
 		AND targetcompid=$7 AND targetsubid=$8 AND targetlocid=$9`
-	if !isPostgres {
-		queryStr = `UPDATE sessions SET incoming_seqnum = ?
+		if !isPostgres {
+			queryStr = `UPDATE sessions SET incoming_seqnum = ?
 		WHERE beginstring=? AND session_qualifier=?
 		AND sendercompid=? AND sendersubid=? AND senderlocid=?
 		AND targetcompid=? AND targetsubid=? AND targetlocid=?`
-	}
-	_, err := store.db.Exec(queryStr,
-		next, s.BeginString, s.Qualifier,
-		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
-		s.TargetCompID, s.TargetSubID, s.TargetLocationID)
+		}
+		_, err := store.db.Exec(queryStr,
+			next, s.BeginString, s.Qualifier,
+			s.SenderCompID, s.SenderSubID, s.SenderLocationID,
+			s.TargetCompID, s.TargetSubID, s.TargetLocationID)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+		store.timeOfLastTargetSeqNumUpdate = time.Now()
 	}
 	return store.cache.SetNextTargetMsgSeqNum(next)
 }
