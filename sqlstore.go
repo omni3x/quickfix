@@ -15,12 +15,13 @@ type sqlStoreFactory struct {
 }
 
 type sqlStore struct {
-	sessionID          SessionID
-	cache              *memoryStore
-	sqlDriver          string
-	sqlDataSourceName  string
-	sqlConnMaxLifetime time.Duration
-	db                 *sql.DB
+	sessionID                 SessionID
+	cache                     *memoryStore
+	sqlDriver                 string
+	sqlDataSourceName         string
+	sqlConnMaxLifetime        time.Duration
+	db                        *sql.DB
+	timeSinceLastTargetUpdate time.Time
 }
 
 // NewSQLStoreFactory returns a sql-based implementation of MessageStoreFactory
@@ -55,11 +56,12 @@ func (f sqlStoreFactory) Create(sessionID SessionID) (msgStore MessageStore, err
 func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration) (store *sqlStore, err error) {
 	isPostgres = driver == "postgres"
 	store = &sqlStore{
-		sessionID:          sessionID,
-		cache:              &memoryStore{},
-		sqlDriver:          driver,
-		sqlDataSourceName:  dataSourceName,
-		sqlConnMaxLifetime: connMaxLifetime,
+		sessionID:                 sessionID,
+		cache:                     &memoryStore{},
+		sqlDriver:                 driver,
+		sqlDataSourceName:         dataSourceName,
+		sqlConnMaxLifetime:        connMaxLifetime,
+		timeSinceLastTargetUpdate: time.Now(),
 	}
 	store.cache.Reset()
 
@@ -226,26 +228,36 @@ func (store *sqlStore) SetNextSenderMsgSeqNum(next int) error {
 	return store.cache.SetNextSenderMsgSeqNum(next)
 }
 
+var targetSeqNumUpdateInterval time.Duration = 500 * time.Millisecond
+
 // SetNextTargetMsgSeqNum sets the next MsgSeqNum that should be received
 func (store *sqlStore) SetNextTargetMsgSeqNum(next int) error {
-	s := store.sessionID
-	queryStr := `UPDATE sessions SET incoming_seqnum = $1
+	start := time.Now()
+	defer func() {
+		fmt.Println("[SQL] SetNextTargetMsgSeqNum: ", time.Since(start))
+	}()
+
+	if time.Since(store.timeSinceLastTargetUpdate) > targetSeqNumUpdateInterval {
+		s := store.sessionID
+		queryStr := `UPDATE sessions SET incoming_seqnum = $1
 		WHERE beginstring=$2 AND session_qualifier=$3
 		AND sendercompid=$4 AND sendersubid=$5 AND senderlocid=$6
 		AND targetcompid=$7 AND targetsubid=$8 AND targetlocid=$9`
-	if !isPostgres {
-		queryStr = `UPDATE sessions SET incoming_seqnum = ?
+		if !isPostgres {
+			queryStr = `UPDATE sessions SET incoming_seqnum = ?
 		WHERE beginstring=? AND session_qualifier=?
 		AND sendercompid=? AND sendersubid=? AND senderlocid=?
 		AND targetcompid=? AND targetsubid=? AND targetlocid=?`
-	}
-	_, err := store.db.Exec(queryStr,
-		next, s.BeginString, s.Qualifier,
-		s.SenderCompID, s.SenderSubID, s.SenderLocationID,
-		s.TargetCompID, s.TargetSubID, s.TargetLocationID)
+		}
+		_, err := store.db.Exec(queryStr,
+			next, s.BeginString, s.Qualifier,
+			s.SenderCompID, s.SenderSubID, s.SenderLocationID,
+			s.TargetCompID, s.TargetSubID, s.TargetLocationID)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+		store.timeSinceLastTargetUpdate = time.Now()
 	}
 	return store.cache.SetNextTargetMsgSeqNum(next)
 }
@@ -258,6 +270,10 @@ func (store *sqlStore) IncrNextSenderMsgSeqNum() error {
 
 // IncrNextTargetMsgSeqNum increments the next MsgSeqNum that should be received
 func (store *sqlStore) IncrNextTargetMsgSeqNum() error {
+	start := time.Now()
+	defer func() {
+		fmt.Println("IncrNextTargetMsgSeqNum HEAT: ", time.Since(start))
+	}()
 	store.cache.IncrNextTargetMsgSeqNum()
 	return store.SetNextTargetMsgSeqNum(store.cache.NextTargetMsgSeqNum())
 }

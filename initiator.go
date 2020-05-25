@@ -10,6 +10,8 @@ import (
 	"golang.org/x/net/proxy"
 )
 
+var messageBufferChanSize = 10000
+
 //Initiator initiates connections and processes messages for all sessions.
 type Initiator struct {
 	app             Application
@@ -174,8 +176,10 @@ func (i *Initiator) handleConnection(session *session, tlsConfig *tls.Config, di
 			netConn = tlsConn
 		}
 
-		msgIn = make(chan fixIn)
-		msgOut = make(chan []byte)
+		msgIn = make(chan fixIn, messageBufferChanSize)
+		msgOut = make(chan []byte, messageBufferChanSize)
+		// msgIn = make(chan fixIn)
+		// msgOut = make(chan []byte)
 		if err := session.connect(msgIn, msgOut); err != nil {
 			session.log.OnEventf("Failed to initiate: %v", err)
 			goto reconnect

@@ -490,6 +490,11 @@ func (s *session) verifyIgnoreSeqNumTooHighOrLow(msg *Message) MessageRejectErro
 }
 
 func (s *session) verifySelect(msg *Message, checkTooHigh bool, checkTooLow bool) MessageRejectError {
+	start := time.Now()
+	defer func() {
+		fmt.Println("verifySelect HEAT: ", time.Since(start))
+	}()
+
 	if reject := s.checkBeginString(msg); reject != nil {
 		return reject
 	}
@@ -524,6 +529,11 @@ func (s *session) verifySelect(msg *Message, checkTooHigh bool, checkTooLow bool
 }
 
 func (s *session) fromCallback(msg *Message) MessageRejectError {
+	start := time.Now()
+	defer func() {
+		fmt.Println("fromCallback HEAT: ", time.Since(start))
+	}()
+
 	msgType, err := msg.Header.GetBytes(tagMsgType)
 	if err != nil {
 		return err
