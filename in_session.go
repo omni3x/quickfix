@@ -2,6 +2,7 @@ package quickfix
 
 import (
 	"bytes"
+	"fmt"
 	"time"
 
 	"github.com/quickfixgo/quickfix/internal"
@@ -12,6 +13,11 @@ type inSession struct{ loggedOn }
 func (state inSession) String() string { return "In Session" }
 
 func (state inSession) FixMsgIn(session *session, msg *Message) sessionState {
+	start := time.Now()
+	defer func() {
+		fmt.Println("FixMsgIn HEAT: ", time.Since(start))
+	}()
+
 	msgType, err := msg.Header.GetBytes(tagMsgType)
 	if err != nil {
 		return handleStateError(session, err)
@@ -44,7 +50,6 @@ func (state inSession) FixMsgIn(session *session, msg *Message) sessionState {
 	if err := session.store.IncrNextTargetMsgSeqNum(); err != nil {
 		return handleStateError(session, err)
 	}
-
 	return state
 }
 

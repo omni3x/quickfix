@@ -1,5 +1,10 @@
 package quickfix
 
+import (
+	"fmt"
+	"time"
+)
+
 type routeKey struct {
 	FIXVersion string
 	MsgType    string
@@ -39,6 +44,11 @@ func (c MessageRouter) AddRoute(beginString string, msgType string, router Messa
 
 //Route may be called from the fromApp/fromAdmin callbacks. Messages that cannot be routed will be rejected with UnsupportedMessageType.
 func (c MessageRouter) Route(msg *Message, sessionID SessionID) MessageRejectError {
+	start := time.Now()
+	defer func() {
+		fmt.Println("Route HEAT: ", time.Since(start))
+	}()
+
 	beginString, err := msg.Header.GetBytes(tagBeginString)
 	if err != nil {
 		return nil
@@ -53,6 +63,11 @@ func (c MessageRouter) Route(msg *Message, sessionID SessionID) MessageRejectErr
 }
 
 func (c MessageRouter) tryRoute(beginString string, msgType string, msg *Message, sessionID SessionID) MessageRejectError {
+	start := time.Now()
+	defer func() {
+		fmt.Println("tryRoute HEAT: ", time.Since(start))
+	}()
+
 	fixVersion := beginString
 	isAdminMsg := isAdminMessageType([]byte(msgType))
 

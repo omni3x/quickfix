@@ -88,7 +88,9 @@ func (sm *stateMachine) Incoming(session *session, m fixIn) {
 		session.log.OnEventf("Msg Parse Error: %v, %q", err.Error(), m.bytes)
 	} else {
 		msg.ReceiveTime = m.receiveTime
+		start := time.Now()
 		sm.fixMsgIn(session, msg)
+		fmt.Println("HEAT: ", time.Since(start))
 	}
 
 	if !msg.keepMessage {

@@ -1,6 +1,9 @@
 package quickfix
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 //The MessageStore interface provides methods to record and retrieve messages for resend purposes
 type MessageStore interface {
@@ -49,6 +52,10 @@ func (store *memoryStore) IncrNextSenderMsgSeqNum() error {
 }
 
 func (store *memoryStore) IncrNextTargetMsgSeqNum() error {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[CACHE] IncrNextTargetMsgSeqNum: ", time.Since(start))
+	}()
 	store.targetMsgSeqNum++
 	return nil
 }

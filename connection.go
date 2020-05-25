@@ -1,6 +1,9 @@
 package quickfix
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 func writeLoop(connection io.Writer, messageOut chan []byte, log Log) {
 	for {
@@ -23,6 +26,7 @@ func readLoop(parser *parser, msgIn chan fixIn) {
 		if err != nil {
 			return
 		}
+		fmt.Println(parser.lastRead, " RCV")
 		msgIn <- fixIn{msg, parser.lastRead}
 	}
 }
