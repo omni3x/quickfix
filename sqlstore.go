@@ -13,6 +13,7 @@ var isPostgres bool
 type sqlStoreFactory struct {
 	settings                     *Settings
 	targetSeqNumDebounceInterval time.Duration
+	db                           *sql.DB
 }
 
 type sqlStore struct {
@@ -28,8 +29,8 @@ type sqlStore struct {
 
 // NewSQLStoreFactory returns a sql-based implementation of MessageStoreFactory. targetSeqNumDebounceInterval controls
 // how often the target's seqnum/incoming_seqnum is updated in the DB
-func NewSQLStoreFactory(settings *Settings, targetSeqNumDebounceInterval time.Duration) MessageStoreFactory {
-	return sqlStoreFactory{settings: settings, targetSeqNumDebounceInterval: targetSeqNumDebounceInterval}
+func NewSQLStoreFactory(settings *Settings, db *sql.DB, targetSeqNumDebounceInterval time.Duration) MessageStoreFactory {
+	return sqlStoreFactory{settings: settings, db: db, targetSeqNumDebounceInterval: targetSeqNumDebounceInterval}
 }
 
 // Create creates a new SQLStore implementation of the MessageStore interface
@@ -38,6 +39,12 @@ func (f sqlStoreFactory) Create(sessionID SessionID) (msgStore MessageStore, err
 	if !ok {
 		return nil, fmt.Errorf("unknown session: %v", sessionID)
 	}
+
+	sqlConnMaxLifetime := 0 * time.Second
+	if f.db != nil {
+		return newSQLStore(sessionID, "", "", sqlConnMaxLifetime, f.db, f.targetSeqNumDebounceInterval)
+	}
+
 	sqlDriver, err := sessionSettings.Setting(config.SQLStoreDriver)
 	if err != nil {
 		return nil, err
@@ -46,18 +53,17 @@ func (f sqlStoreFactory) Create(sessionID SessionID) (msgStore MessageStore, err
 	if err != nil {
 		return nil, err
 	}
-	sqlConnMaxLifetime := 0 * time.Second
 	if sessionSettings.HasSetting(config.SQLStoreConnMaxLifetime) {
 		sqlConnMaxLifetime, err = sessionSettings.DurationSetting(config.SQLStoreConnMaxLifetime)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return newSQLStore(sessionID, sqlDriver, sqlDataSourceName, sqlConnMaxLifetime, f.targetSeqNumDebounceInterval)
+	return newSQLStore(sessionID, sqlDriver, sqlDataSourceName, sqlConnMaxLifetime, nil, f.targetSeqNumDebounceInterval)
 }
 
-func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration, targetSeqNumDebounceInterval time.Duration) (store *sqlStore, err error) {
-	isPostgres = driver == "postgres"
+func newSQLStore(sessionID SessionID, driver string, dataSourceName string, connMaxLifetime time.Duration, db *sql.DB, targetSeqNumDebounceInterval time.Duration) (store *sqlStore, err error) {
+	isPostgres = driver == "postgres" || db != nil
 	store = &sqlStore{
 		sessionID:                    sessionID,
 		cache:                        &memoryStore{},
@@ -69,10 +75,14 @@ func newSQLStore(sessionID SessionID, driver string, dataSourceName string, conn
 	}
 	store.cache.Reset()
 
-	if store.db, err = sql.Open(store.sqlDriver, store.sqlDataSourceName); err != nil {
-		return nil, err
+	if db != nil {
+		store.db = db
+	} else {
+		if store.db, err = sql.Open(store.sqlDriver, store.sqlDataSourceName); err != nil {
+			return nil, err
+		}
+		store.db.SetConnMaxLifetime(store.sqlConnMaxLifetime)
 	}
-	store.db.SetConnMaxLifetime(store.sqlConnMaxLifetime)
 
 	if err = store.db.Ping(); err != nil { // ensure immediate connection
 		return nil, err

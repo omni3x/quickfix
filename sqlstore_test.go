@@ -56,7 +56,7 @@ TargetCompID=%s`, sqlDriver, sqlDsn, sessionID.BeginString, sessionID.SenderComp
 	require.Nil(suite.T(), err)
 
 	// create store
-	suite.msgStore, err = NewSQLStoreFactory(settings, time.Nanosecond).Create(sessionID)
+	suite.msgStore, err = NewSQLStoreFactory(settings, nil, time.Nanosecond).Create(sessionID)
 	require.Nil(suite.T(), err)
 }
 
