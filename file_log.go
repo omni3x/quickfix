@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"time"
 
 	"github.com/quickfixgo/quickfix/config"
 )
@@ -21,6 +22,10 @@ var (
 )
 
 func (l fileLog) OnIncoming(msg []byte) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] FILE LOG OnIncoming", time.Since(start))
+	}()
 	// msgType := getMsgType(msg)
 	// if msgType == "W" || msgType == "X" {
 	// 	return // don't save price data

@@ -1,6 +1,9 @@
 package quickfix
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 func writeLoop(connection io.Writer, messageOut chan []byte, log Log) {
 	for {
@@ -22,6 +25,9 @@ func readLoop(parser *parser, msgIn chan fixIn) {
 		msg, err := parser.ReadMessage()
 		if err != nil {
 			return
+		}
+		if cap(msgIn) == len(msgIn) {
+			fmt.Println("!!!!! [TIMING]  MSGIN IS BLOCKED")
 		}
 		msgIn <- fixIn{msg, parser.lastRead}
 	}

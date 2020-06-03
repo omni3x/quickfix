@@ -478,6 +478,10 @@ func (s *session) initiateLogoutInReplyTo(reason string, inReplyTo *Message) (er
 }
 
 func (s *session) verify(msg *Message) MessageRejectError {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] verify: ", time.Since(start))
+	}()
 	return s.verifySelect(msg, true, true)
 }
 
@@ -524,6 +528,11 @@ func (s *session) verifySelect(msg *Message, checkTooHigh bool, checkTooLow bool
 }
 
 func (s *session) fromCallback(msg *Message) MessageRejectError {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] fromCallback: ", time.Since(start))
+	}()
+
 	msgType, err := msg.Header.GetBytes(tagMsgType)
 	if err != nil {
 		return err

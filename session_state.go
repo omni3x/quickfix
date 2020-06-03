@@ -68,6 +68,10 @@ func (sm *stateMachine) Disconnected(session *session) {
 }
 
 func (sm *stateMachine) Incoming(session *session, m fixIn) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("===== [TIMING]  Incoming: ", time.Since(start))
+	}()
 	sm.CheckSessionTime(session, time.Now())
 	if !sm.IsConnected() {
 		return

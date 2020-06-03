@@ -143,6 +143,10 @@ func ParseMessageWithDataDictionary(
 	transportDataDictionary *datadictionary.DataDictionary,
 	applicationDataDictionary *datadictionary.DataDictionary,
 ) (err error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] ParseMessageWithDataDictionary: ", time.Since(start))
+	}()
 	msg.Header.Clear()
 	msg.Body.Clear()
 	msg.Trailer.Clear()
