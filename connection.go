@@ -26,9 +26,10 @@ func readLoop(parser *parser, msgIn chan fixIn) {
 		if err != nil {
 			return
 		}
-		if cap(msgIn) == len(msgIn) {
+		select {
+		case msgIn <- fixIn{msg, parser.lastRead}:
+		default:
 			fmt.Println("!!!!! [TIMING]  MSGIN IS BLOCKED")
 		}
-		msgIn <- fixIn{msg, parser.lastRead}
 	}
 }

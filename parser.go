@@ -3,6 +3,7 @@ package quickfix
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"time"
 
@@ -27,6 +28,11 @@ func newParser(reader io.Reader) *parser {
 }
 
 func (p *parser) readMore() (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] readMore: ", time.Since(start))
+	}()
+
 	if len(p.buffer) == cap(p.buffer) {
 		var newBuffer []byte
 		switch {
@@ -47,9 +53,12 @@ func (p *parser) readMore() (int, error) {
 
 		copy(newBuffer, p.buffer)
 		p.buffer = newBuffer
+		fmt.Println("[TIMING] readMore BUFFER RESIZE: ", time.Since(start))
 	}
 
+	readStart := time.Now()
 	n, e := p.reader.Read(p.buffer[len(p.buffer):cap(p.buffer)])
+	fmt.Println("[TIMING] readMore READ SOCKET: ", time.Since(readStart))
 	p.lastRead = time.Now()
 	p.buffer = p.buffer[:len(p.buffer)+n]
 	return n, e
@@ -60,6 +69,10 @@ func (p *parser) findIndex(delim []byte) (int, error) {
 }
 
 func (p *parser) findIndexAfterOffset(offset int, delim []byte) (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] findIndexAfterOffset: ", time.Since(start))
+	}()
 	for {
 		if offset > len(p.buffer) {
 			if n, err := p.readMore(); n == 0 && err != nil {
@@ -82,10 +95,19 @@ func (p *parser) findIndexAfterOffset(offset int, delim []byte) (int, error) {
 }
 
 func (p *parser) findStart() (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] findStart: ", time.Since(start))
+	}()
 	return p.findIndex([]byte("8="))
 }
 
 func (p *parser) findEndAfterOffset(offset int) (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] findEndAfterOffset: ", time.Since(start))
+	}()
+
 	index, err := p.findIndexAfterOffset(offset, []byte("\00110="))
 	if err != nil {
 		return index, err
@@ -100,6 +122,11 @@ func (p *parser) findEndAfterOffset(offset int) (int, error) {
 }
 
 func (p *parser) jumpLength() (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] jumpLength: ", time.Since(start))
+	}()
+
 	lengthIndex, err := p.findIndex([]byte("9="))
 	if err != nil {
 		return 0, err
@@ -129,6 +156,10 @@ func (p *parser) jumpLength() (int, error) {
 }
 
 func (p *parser) ReadMessage() (msgBytes *bytes.Buffer, err error) {
+	timeStart := time.Now()
+	defer func() {
+		fmt.Println("[TIMING] Parser ReadMessage: ", time.Since(timeStart))
+	}()
 	start, err := p.findStart()
 	if err != nil {
 		return
@@ -145,10 +176,12 @@ func (p *parser) ReadMessage() (msgBytes *bytes.Buffer, err error) {
 		return
 	}
 
+	newStart := time.Now()
 	msgBytes = bufferPool.Get()
 	msgBytes.Reset()
 	msgBytes.Write(p.buffer[:index])
 	p.buffer = p.buffer[index:]
+	fmt.Println("[TIMING] ReadMessage BUFFER SHIT: ", time.Since(newStart))
 
 	return
 }
