@@ -21,7 +21,7 @@ var (
 )
 
 func (l fileLog) OnIncoming(msg []byte) {
-	msgType := getMsgType(msg)
+	// msgType := getMsgType(msg)
 	// if msgType == "W" || msgType == "X" {
 	// 	return // don't save price data
 	// }
