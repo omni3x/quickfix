@@ -603,8 +603,11 @@ func (s *session) checkSendingTime(msg *Message) MessageRejectError {
 	if err != nil {
 		return err
 	}
-
-	if delta := time.Since(sendingTime); delta <= -1*s.MaxLatency || delta >= s.MaxLatency {
+	delta := time.Since(sendingTime)
+	socketDelta := time.Since(msg.ReceiveTime)
+	fmt.Println("SENDING DELTA ", delta)
+	fmt.Println("SOCKET DELTA ", socketDelta)
+	if delta <= -1*s.MaxLatency || delta >= s.MaxLatency {
 		return sendingTimeAccuracyProblem()
 	}
 
