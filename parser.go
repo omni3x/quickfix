@@ -3,6 +3,7 @@ package quickfix
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"time"
 
@@ -82,10 +83,20 @@ func (p *parser) findIndexAfterOffset(offset int, delim []byte) (int, error) {
 }
 
 func (p *parser) findStart() (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("findStart DELTA: ", time.Since(start))
+	}()
+
 	return p.findIndex([]byte("8="))
 }
 
 func (p *parser) findEndAfterOffset(offset int) (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("findEndAfterOffest DELTA: ", time.Since(start))
+	}()
+
 	index, err := p.findIndexAfterOffset(offset, []byte("\00110="))
 	if err != nil {
 		return index, err
@@ -100,6 +111,10 @@ func (p *parser) findEndAfterOffset(offset int) (int, error) {
 }
 
 func (p *parser) jumpLength() (int, error) {
+	start := time.Now()
+	defer func() {
+		fmt.Println("jumpLength DELTA: ", time.Since(start))
+	}()
 	lengthIndex, err := p.findIndex([]byte("9="))
 	if err != nil {
 		return 0, err
@@ -129,6 +144,11 @@ func (p *parser) jumpLength() (int, error) {
 }
 
 func (p *parser) ReadMessage() (msgBytes *bytes.Buffer, err error) {
+	readStart := time.Now()
+	defer func() {
+		fmt.Println("ReadMessage DELTA: ", time.Since(readStart))
+	}()
+
 	start, err := p.findStart()
 	if err != nil {
 		return
