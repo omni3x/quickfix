@@ -760,6 +760,7 @@ func (s *session) run() {
 			if !ok {
 				s.Disconnected(s)
 			} else {
+				fmt.Println("READ OFF CHANNEL DELTA: ", time.Since(fixIn.receiveTime))
 				s.Incoming(s, fixIn)
 			}
 

@@ -27,9 +27,10 @@ func readLoop(parser *parser, msgIn chan fixIn) {
 		if err != nil {
 			return
 		}
+		fmt.Println("BEFORE CHANNEL WRITE DELTA: ", time.Since(parser.lastRead))
 		select {
 		case msgIn <- fixIn{msg, parser.lastRead}:
-			fmt.Println("RECEIVED MESSAGE SENT AT: ", parser.lastRead, " DIFF: ", time.Since(parser.lastRead))
+			fmt.Println("AFTER CHANNEL WRITE DELTA: ", time.Since(parser.lastRead))
 		default:
 			fmt.Println("BLOCKED: ", time.Now())
 		}

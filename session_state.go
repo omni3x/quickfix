@@ -84,6 +84,7 @@ func (sm *stateMachine) Incoming(session *session, m fixIn) {
 	session.log.OnIncoming(sm.logMsgBuffer[:msgLen])
 
 	msg := session.messagePool.Get()
+	fmt.Println("BEFORE DATADICT PARSE DELTA: ", time.Since(m.receiveTime))
 	if err := ParseMessageWithDataDictionary(msg, m.bytes, session.transportDataDictionary, session.appDataDictionary); err != nil {
 		session.log.OnEventf("Msg Parse Error: %v, %q", err.Error(), m.bytes)
 	} else {
