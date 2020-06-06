@@ -82,6 +82,7 @@ type Message struct {
 
 	//ReceiveTime is the time that this message was read from the socket connection
 	ReceiveTime time.Time
+	timings     []timing
 
 	rawMessage *bytes.Buffer
 

@@ -604,9 +604,14 @@ func (s *session) checkSendingTime(msg *Message) MessageRejectError {
 		return err
 	}
 	delta := time.Since(sendingTime)
-	socketDelta := time.Since(msg.ReceiveTime)
+	msg.timings = append(msg.timings, timing{"check latency", time.Now()})
+	fmt.Println("=============START=============")
+	for _, mark := range msg.timings {
+		fmt.Println(mark.label, " : ", mark.mark)
+	}
 	fmt.Println("SENDING DELTA ", delta)
-	fmt.Println("SOCKET DELTA ", socketDelta)
+	fmt.Println("=============END==============")
+
 	if delta <= -1*s.MaxLatency || delta >= s.MaxLatency {
 		return sendingTimeAccuracyProblem()
 	}
@@ -671,9 +676,15 @@ func (s *session) doReject(msg *Message, rej MessageRejectError) error {
 	return s.sendInReplyTo(reply, msg)
 }
 
+type timing struct {
+	label string
+	mark  time.Time
+}
+
 type fixIn struct {
 	bytes       *bytes.Buffer
 	receiveTime time.Time
+	timings     []timing
 }
 
 func (s *session) returnToPool(msg *Message) {
@@ -760,7 +771,7 @@ func (s *session) run() {
 			if !ok {
 				s.Disconnected(s)
 			} else {
-				fmt.Println("READ OFF CHANNEL DELTA: ", time.Since(fixIn.receiveTime))
+				fixIn.timings = append(fixIn.timings, timing{"channel read", time.Now()})
 				s.Incoming(s, fixIn)
 			}
 

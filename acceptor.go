@@ -262,7 +262,7 @@ func (a *Acceptor) handleConnection(netConn net.Conn) {
 	}
 
 	go func() {
-		msgIn <- fixIn{msgBytes, parser.lastRead}
+		msgIn <- fixIn{msgBytes, parser.lastRead, nil}
 		readLoop(parser, msgIn)
 	}()
 

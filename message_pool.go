@@ -16,6 +16,7 @@ func (p *messagePool) Get() (msg *Message) {
 		msg = p.New()
 	}
 
+	msg.timings = nil
 	msg.keepMessage = false
 
 	return
