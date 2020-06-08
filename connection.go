@@ -30,7 +30,9 @@ func readLoop(parser *parser, msgIn chan fixIn) {
 		var err error
 		if persistentMessage == nil && numMessages < 5 {
 			persistentMessage, err = parser.ReadMessage()
-			numMessages++
+			if err == nil {
+				numMessages++
+			}
 		}
 		if err != nil {
 			return
