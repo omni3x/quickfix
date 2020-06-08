@@ -95,7 +95,7 @@ func (sm *stateMachine) Incoming(session *session, m fixIn) {
 	}
 
 	if !msg.keepMessage {
-		session.returnToPool(msg)
+		// session.returnToPool(msg)
 	}
 	session.peerTimer.Reset(time.Duration(float64(1.2) * float64(session.HeartBtInt)))
 }

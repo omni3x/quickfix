@@ -20,11 +20,11 @@ func writeLoop(connection io.Writer, messageOut chan []byte, log Log) {
 	}
 }
 
-var persistentMessage *bytes.Buffer
-var numMessages int = 0
-
 func readLoop(parser *parser, msgIn chan fixIn) {
 	defer close(msgIn)
+
+	var persistentMessage *bytes.Buffer
+	numMessages := 0
 
 	for {
 		var err error
