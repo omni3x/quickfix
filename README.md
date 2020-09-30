@@ -3,7 +3,16 @@ QuickFIX/Go
 
 Omniex Fork of QuickFIX/Go
 ---------------------------------
+### Major Omniex Fork Changes
+1. Do not log 35=W and 35=X messages And Redact Sensitive Fields (#1)
+2. Replaces SOH Delimeter with Pipe in FIX Log Messages and Use a copy of FIX Message for Logging (#2) (#5)
+3. Adds FIX.5.0 Version BeginString (#6)
+4. Set Seqnums to use PostgresSQL persistent store for sessions (#9) 
+5. Set Marketdata session to always use MemoryStore (#10) (#11)
+6. Performance improvements by using buffered channels and only persisting every couple of seqnums (#15)
+7. Use a provided DB connection instead of spinning up a separate DB connection (#16)
 
+---------------------------------
 [![GoDoc](https://godoc.org/github.com/quickfixgo/quickfix?status.png)](https://godoc.org/github.com/quickfixgo/quickfix) [![Build Status](https://travis-ci.org/quickfixgo/quickfix.svg?branch=master)](https://travis-ci.org/quickfixgo/quickfix) [![Go Report Card](https://goreportcard.com/badge/github.com/quickfixgo/quickfix)](https://goreportcard.com/report/github.com/quickfixgo/quickfix)
 
 - Website: http://www.quickfixgo.org
