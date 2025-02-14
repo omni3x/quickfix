@@ -2,6 +2,7 @@ def major = ''
 def minor = ''
 def patch = ''
 def tag = ''
+def dockerImage = ''
 
 pipeline {
   agent { label 'linux' }
@@ -9,16 +10,21 @@ pipeline {
   environment {
     // Credential ID from https://jenkins.service.internal.projecticeland.net/credentials/
     DOCKER_REGISTRY = "https://docker-virtual.artifactory.service.internal.projecticeland.net"
+
+    apiRegistry = 'omniex/quickfix'
   }
 
   stages {
+
+    
+
     stage('Get Current Version') {
       steps {            
         script {
            withCredentials([string(credentialsId: 'github-molly-brown-pw', variable: 'GITHUB_TOKEN'), sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
             withEnv(["GIT_SSH_COMMAND=ssh -i $GITHUB_KEY"]) {
               // find the latest tag from remote, default to 1.0.0 if it doesn't exist
-              sh "git remote set-url origin git@github.com:omni3x/isp.git"
+              sh "git remote set-url origin git@github.com:omni3x/quickfix.git"
               def command = $/ git ls-remote --quiet --tags --refs | awk -v def=1.0.0 -F\\\/ '{ print $3 } END { if(NR==0) {print def} }' | sort -V | tail -n 1/$
               def version = sh(returnStdout: true, script: command).trim()
 
