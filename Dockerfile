@@ -1,8 +1,5 @@
 FROM    golang:1.19-buster as build
 
-RUN apk update &&\
-    apk add --no-cache git build-base
-
 WORKDIR /home/app
 
 COPY go.mod go.sum ./
