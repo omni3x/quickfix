@@ -16,7 +16,19 @@ pipeline {
 
   stages {
 
-    
+    stage('Build Server') {
+      steps {
+        script {
+          withCredentials([string(credentialsId: 'github-molly-brown-pw', variable: 'GITHUB_TOKEN'), sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
+            withEnv(["GIT_SSH_COMMAND=ssh -i $GITHUB_KEY"]) {
+              docker.withRegistry(DOCKER_REGISTRY, "artifactory-m-devprod") {
+                dockerImage = docker.build("$apiRegistry:latest", "--pull --build-arg GITHUB_TOKEN=$GITHUB_TOKEN -f ./Dockerfile .")
+              }
+            }
+          }
+        }
+      }
+    }
 
     stage('Get Current Version') {
       steps {            
