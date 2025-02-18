@@ -19,10 +19,10 @@ pipeline {
     stage('Build Server') {
       steps {
         script {
-          withCredentials([string(credentialsId: 'github-molly-brown-pw', variable: 'GITHUB_TOKEN'), sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
+          withCredentials([sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
             withEnv(["GIT_SSH_COMMAND=ssh -i $GITHUB_KEY"]) {
               docker.withRegistry(DOCKER_REGISTRY, "artifactory-m-devprod") {
-                dockerImage = docker.build("$apiRegistry:latest", "--pull --build-arg GITHUB_TOKEN=$GITHUB_TOKEN -f ./Dockerfile .")
+                dockerImage = docker.build("$apiRegistry:latest", "--pull -f ./Dockerfile .")
               }
             }
           }
@@ -33,7 +33,7 @@ pipeline {
     stage('Get Current Version') {
       steps {            
         script {
-           withCredentials([string(credentialsId: 'github-molly-brown-pw', variable: 'GITHUB_TOKEN'), sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
+           withCredentials([sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
             withEnv(["GIT_SSH_COMMAND=ssh -i $GITHUB_KEY"]) {
               // find the latest tag from remote, default to 1.0.0 if it doesn't exist
               sh "git remote set-url origin git@github.com:omni3x/quickfix.git"
@@ -102,7 +102,7 @@ pipeline {
       steps {
         script {
           // Push to Github
-           withCredentials([string(credentialsId: 'github-molly-brown-pw', variable: 'GITHUB_TOKEN'), sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
+           withCredentials([sshUserPrivateKey(credentialsId: 'github-molly-brown-ssh-key', keyFileVariable: 'GITHUB_KEY')]) {
             withEnv(["GIT_SSH_COMMAND=ssh -i $GITHUB_KEY"]) {
               sh("""
                 git checkout origin/${branch_name}
